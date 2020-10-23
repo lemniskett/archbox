@@ -2,7 +2,8 @@
 
 CHROOT="/var/archlinux/root.x86_64"
 COMMAND=$(echo $@ | tr ' ' '\ ')
+USER=$(whoami)
 
 doas cp /etc/resolv.conf $CHROOT/etc/resolv.conf
-[[ -z $@ ]] && doas chroot $CHROOT /bin/su lemniskett \
-    || doas chroot $CHROOT su -c "$COMMAND" lemniskett
+[[ -z $@ ]] && doas chroot $CHROOT /bin/su $USER \
+    || doas chroot $CHROOT su -c "$COMMAND" $USER
