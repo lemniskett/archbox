@@ -6,4 +6,4 @@ USER=$(whoami)
 
 doas cp /etc/resolv.conf $CHROOT/etc/resolv.conf
 [[ -z $@ ]] && doas chroot $CHROOT /bin/su $USER \
-    || doas chroot $CHROOT su -c "$COMMAND" $USER
+    || doas chroot $CHROOT /bin/su -c "$COMMAND" $USER
