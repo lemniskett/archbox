@@ -1,5 +1,5 @@
 #!/bin/bash
 
 source /etc/archbox.conf
-echo executing $@
-chroot $CHROOT /bin/su -c $@ $USER
+COMMAND=$(echo $@ | tr ' ' '\ ')
+chroot $CHROOT /bin/su -c "$COMMAND" $USER
