@@ -14,6 +14,16 @@ asroot(){
     [[ $EUID -ne 0 ]] && echo "Run this as root!" && exit 1
 }
 
+help_text(){
+cat << EOF
+USAGE $0 <arguments>
+OPTIONS:
+  --create LINK     Creates a chroot enviroment.
+  --enter           Enters chroot enviroment.
+  --help            Displays this help message.
+EOF
+}
+
 case $1 in
     --create)
         asroot
@@ -39,8 +49,11 @@ case $1 in
 	    copyresolv
     	$PRIV /usr/local/share/archbox/bin/archboxenter
 	;;
+    --help)
+        help_text
+    ;;
     "")
-        echo "Help text"
+        help_text
     ;;
     *)
     	copyresolv
