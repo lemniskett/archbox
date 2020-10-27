@@ -3,7 +3,7 @@
 source /etc/archbox.conf
 
 checkdep(){
-    which $1 >/dev/null 2>&1 || echo "Install $1." && exit 1
+    which $1 >/dev/null 2>&1 || err "Install $1!" && exit 1
 }
 
 copyresolv(){
@@ -11,13 +11,13 @@ copyresolv(){
 }
 
 asroot(){
-    [[ $EUID -ne 0 ]] && echo "Run this as root!" && exit 1
+    [[ $EUID -ne 0 ]] && err "Run this as root!" && exit 1
 }
 
 help_text(){
 cat << EOF
-
 USAGE $0 <arguments>
+
 OPTIONS:
   --create LINK     Creates a chroot enviroment.
   --enter           Enters chroot enviroment.
