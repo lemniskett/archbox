@@ -3,7 +3,7 @@
 source /etc/archbox.conf
 
 checkdep(){
-    which $1 >/dev/null 2>&1 || err "Install $1!" && exit 1
+    which $1 >/dev/null 2>&1 || err "Install $1!"
 }
 
 copyresolv(){
@@ -11,7 +11,7 @@ copyresolv(){
 }
 
 asroot(){
-    [[ $EUID -ne 0 ]] && err "Run this as root!" && exit 1
+    [[ $EUID -ne 0 ]] && err "Run this as root!"
 }
 
 help_text(){
@@ -27,21 +27,20 @@ EOF
 }
 
 err(){
-    echo "$(tput bold)$(tput setaf 1)==> $@"
+    echo "$(tput bold)$(tput setaf 1)==> $@ $(tput sgr0)"
     exit 1
 }
 
 msg(){
-    echo "$(tput bold)$(tput setaf 2)==> $@"
+    echo "$(tput bold)$(tput setaf 2)==> $@ $(tput sgr0)"
 }
 
 case $1 in
     --create)
         asroot
-        [[ -z $2 ]] && echo "Specify the link of Arch Linux bootstrap tarball." \
-            && exit 1
+        [[ -z $2 ]] && err "Specify the link of Arch Linux bootstrap tarball!"
         msg "Creating chroot directory..."
-        mkdir $INSTALL_PATH
+        mkdir -p $INSTALL_PATH
         cd $INSTALL_PATH
         msg "Downloading Arch Linux tarball..."
         checkdep wget
@@ -54,11 +53,29 @@ case $1 in
         echo "Editor of your choice:"
         read MIRROR_EDITOR
         $MIRROR_EDITOR $CHROOT/etc/pacman.d/mirrorlist || exit 1
-        msg "Disabling Pacman's CheckSpace"
+        msg "Disabling Pacman's CheckSpace..."
         checkdep sed
         sed -i 's/CheckSpace/#CheckSpace/g' $CHROOT/etc/pacman.conf
-        
-        ;;
+        msg "Mounting necessary filesystems..."
+        mount -R /home $CHROOT/home
+        mount -t proc /proc $CHROOT/proc
+        mount -R /tmp $CHROOT/tmp
+        mount -R /sys $CHROOT/sys
+        mount -R /dev $CHROOT/dev
+        mount -R /run $CHROOT/run
+        mount --make-rslave $CHROOT/dev
+        mount --make-rslave $CHROOT/sys
+        mkdir -p $CHROOT/var/lib/dbus
+        mount -R /var/lib/dbus $CHROOT/var/lib/dbus
+        mkdir -p $CHROOT/lib/modules
+        mount -R /lib/modules $CHROOT/lib/modules
+        mount -R /boot $CHROOT/boot
+    ;;
+    --setup)
+        asroot
+        cp /usr/local/share/archbox/chroot_setup.bash $CHROOT/chroot_setup
+        chroot $CHROOT /bin/bash -c "sh /chroot_setup"
+    ;;
     --enter)
 	    copyresolv
         $PRIV /usr/local/share/archbox/bin/archboxenter
