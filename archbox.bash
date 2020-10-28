@@ -70,11 +70,8 @@ case $1 in
         mkdir -p $CHROOT/lib/modules
         mount -R /lib/modules $CHROOT/lib/modules
         mount -R /boot $CHROOT/boot
-    ;;
-    --setup)
-        asroot
-        cp /usr/local/share/archbox/chroot_setup.bash $CHROOT/chroot_setup
-        chroot $CHROOT /bin/bash -c "sh /chroot_setup"
+	cp /usr/local/share/archbox/chroot_setup.bash $CHROOT/chroot_setup
+	chroot $CHROOT /bin/bash -c "sh /chroot_setup"
     ;;
     --enter)
 	    copyresolv
