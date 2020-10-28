@@ -75,7 +75,7 @@ case $1 in
     ;;
     --enter)
 	    copyresolv
-        $PRIV /usr/local/share/archbox/bin/archboxenter
+        $PRIV /usr/local/share/archbox/bin/archbox --enter
 	;;
     --help)
         help_text
@@ -89,6 +89,6 @@ case $1 in
     *)
     	copyresolv
         COMMAND=$(echo $@ | tr ' ' '\ ')
-	    $PRIV /usr/local/share/archbox/bin/archboxcommand $COMMAND
+	    $PRIV /usr/local/share/archbox/bin/archbox $COMMAND
     ;;
 esac

@@ -25,3 +25,5 @@ You may want to add this, if you don't want to run archbox chroot without passwo
 Instead of opening terminal everytime you want to run application inside chroot, you may want to launch rofi inside chroot, install rofi and do ```archbox rofi <rofi options>```.
 #### Pulseaudio
 If the audio doesn't work, comment ```mount -R /var/lib/dbus $CHROOT/var/lib/dbus``` in init script and start pulseaudio inside chroot instead, do ```archbox pulseaudio```.
+#### Prompt
+If you use bash you could add a nice little Arch Linux icon in your prompt, add ```[[ -e /etc/arch-release ]] && export PS1=" $PS1"``` to your ```~/.bashrc```

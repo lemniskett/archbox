@@ -1,5 +1,7 @@
 #!/bin/bash
 
 source /etc/archbox.conf
+
 COMMAND=$(echo $@ | tr ' ' '\ ')
-chroot $CHROOT /bin/su -c "$COMMAND" $USER
+[[ ! $1 = "--enter" ]] && chroot $CHROOT /bin/su -c "$COMMAND" $USER \
+    || chroot $CHROOT /bin/su $USER
