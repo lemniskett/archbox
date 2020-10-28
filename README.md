@@ -26,4 +26,4 @@ Instead of opening terminal everytime you want to run application inside chroot,
 #### Pulseaudio
 If the audio doesn't work, comment ```mount -R /var/lib/dbus $CHROOT/var/lib/dbus``` in init script and start pulseaudio inside chroot instead, do ```archbox pulseaudio```.
 #### Prompt
-If you use bash you could add a nice little Arch Linux icon in your prompt, add ```[[ -e /etc/arch-release ]] && export PS1=" $PS1"``` to your ```~/.bashrc```
+If you use bash and nerd font you could add a nice little Arch Linux icon in your prompt, add ```[[ -e /etc/arch-release ]] && export PS1=" $PS1"``` to your ```~/.bashrc```
