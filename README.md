@@ -13,7 +13,7 @@ To enter chroot, do ```archbox --enter```.
 To execute commands inside chroot envirotment, do ```archbox <command>```.
 for example, to update chroot, do ```archbox sudo pacman -Syu```.
 ### Automount filesystem
-If you use runit, copy archbox folder inside ```runit/``` and symlink it to whatever your distro store running runit services, if you don't use runit, you may need to create your own init script, or create a cronjob that runs on boot.
+If you use runit, copy archbox folder inside ```runit/``` to whatever your distro store runit services and symlink it to whatever your distro store running runit services, if you don't use runit, you may need to create your own init script, or create a cronjob that runs on boot.
 ### Optional steps
 You may want to add this, if you don't want to run archbox chroot without password:
 #### Sudo
