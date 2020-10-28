@@ -13,7 +13,7 @@ msg "Initializing pacman keyrings..."
 pacman-key --init
 pacman-key --populate archlinux
 msg "Installing essential packages..."
-pacman -Syu base base-devel xorg --noconfirm
+pacman -Syu base base-devel xorg pulse audio --noconfirm
 msg "Creating user account..."
 echo "Enter the name of the user account, you may want it to be the same as the host os so it will share the same home directory"
 read CHROOT_USER
