@@ -14,9 +14,13 @@ asroot(){
     [[ $EUID -ne 0 ]] && err "Run this as root!"
 }
 
+storedbus(){
+    echo $DBUS_SESSION_ADDRESS > /tmp/archbox_dbus_session_address
+}
+
 help_text(){
 cat << EOF
-USAGE $0 <arguments>
+USAGE: $0 <arguments>
 
 OPTIONS:
   --create LINK     Creates a chroot enviroment.
@@ -74,8 +78,9 @@ case $1 in
 	chroot $CHROOT /bin/bash -c "sh /chroot_setup"
     ;;
     --enter)
-	    copyresolv
-        $PRIV /usr/local/share/archbox/bin/archbox --enter
+	storedbus
+	copyresolv
+        $PRIV /usr/local/share/archbox/bin/archbox enter
 	;;
     --help)
         help_text
@@ -87,8 +92,9 @@ case $1 in
         err "Unknown option: $1"
     ;;
     *)
+	storedbus
     	copyresolv
         COMMAND=$(echo $@ | tr ' ' '\ ')
-	    $PRIV /usr/local/share/archbox/bin/archbox $COMMAND
+	$PRIV /usr/local/share/archbox/bin/archbox $COMMAND
     ;;
 esac
