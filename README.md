@@ -43,7 +43,7 @@ Instead of opening terminal everytime you want to run application inside chroot,
 archbox rofi <rofi options>
 ```
 #### Prompt
-If you use bash with nerd font you could add a nice little Arch Linux icon in your prompt, add "
+If you use bash with nerd font you could add a nice little Arch Linux icon in your prompt, add :
 ```
 [[ -e /etc/arch-release ]] && export PS1=" $PS1"
 ```
@@ -52,4 +52,8 @@ to your ```~/.bashrc```
 Edit ENV_VAR in ```/etc/archbox.conf```. For example, if you want to use qt5ct as Qt5 theme, edit it like this :
 ```
 ENV_VAR="QT_QPA_PLATFORMTHEME=qt5ct"
+```
+An example with multiple enviroment variables.
+```
+ENV_VAR="QT_QPA_PLATFORMTHEME=qt5ct GTK_CSD=0 LD_PRELOAD=/var/home/lemniskett/git_repo/gtk3-nocsd/libgtk3-nocsd.so.0"
 ```
