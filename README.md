@@ -48,3 +48,8 @@ If you use bash with nerd font you could add a nice little Arch Linux icon in yo
 [[ -e /etc/arch-release ]] && export PS1=" $PS1"
 ```
 to your ```~/.bashrc```
+#### Adding enviroment variables
+Edit ENV_VAR in ```/etc/archbox.conf```. For example, if you want to use /var/home/lemniskett as home directory, edit it like this :
+```
+ENV_VAR="QT_QPA_PLATFORMTHEME=qt5ct"
+```
