@@ -14,8 +14,9 @@ asroot(){
     [[ $EUID -ne 0 ]] && err "Run this as root!"
 }
 
-storedbus(){
+storeenv(){
     echo $DBUS_SESSION_BUS_ADDRESS > /tmp/archbox_dbus_session_address
+    echo $XDG_RUNTIME_DIR > /tmp/archbox_xdg_runtime_dir
 }
 
 help_text(){
@@ -78,7 +79,7 @@ case $1 in
 	chroot $CHROOT /bin/bash -c "sh /chroot_setup"
     ;;
     --enter)
-	storedbus
+	storeenv
 	copyresolv
         $PRIV /usr/local/share/archbox/bin/archbox enter
 	;;
@@ -92,7 +93,7 @@ case $1 in
         err "Unknown option: $1"
     ;;
     *)
-	storedbus
+	storeenv
     	copyresolv
         COMMAND=$(echo $@ | tr ' ' '\ ')
 	$PRIV /usr/local/share/archbox/bin/archbox $COMMAND
