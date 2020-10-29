@@ -2,8 +2,10 @@
 
 source /etc/archbox.conf
 
-DBUS_ADDRESS_ENV="$(cat /tmp/archbox_dbus_session_address)"
-XDG_RUNTIME_ENV="$(cat /tmp/archbox_xdg_runtime_dir)"
+REQ_ENV="DBUS_SESSION_BUS_ADDRESS=$(cat /tmp/archbox_dbus_session_address) XDG_RUNTIME_DIR=$(cat /tmp/archbox_xdg_runtime_dir)"
+
+ENV="$REQ_ENV $ENV_VAR"
+
 COMMAND=$(echo $@ | tr ' ' '\ ')
-[[ $1 = "enter" ]] && chroot $CHROOT /sbin/env DBUS_SESSION_BUS_ADDRESS=$DBUS_ADDRESS_ENV XDG_RUNTIME_DIR=$XDG_RUNTIME_ENV /bin/su $USER \
-    || chroot $CHROOT /bin/su -c "env DBUS_SESSION_BUS_ADDRESS=$DBUS_ADDRESS XDG_RUNTIME_DIR=$XDG_RUNTIME_ENV $COMMAND" $USER
+[[ $1 = "enter" ]] && chroot $CHROOT /sbin/env $ENV /bin/su $USER \
+    || chroot $CHROOT /bin/su -c "env $ENV $COMMAND" $USER
