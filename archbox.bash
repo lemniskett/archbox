@@ -15,7 +15,7 @@ asroot(){
 }
 
 storedbus(){
-    echo $DBUS_SESSION_ADDRESS > /tmp/archbox_dbus_session_address
+    echo $DBUS_SESSION_BUS_ADDRESS > /tmp/archbox_dbus_session_address
 }
 
 help_text(){
