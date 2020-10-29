@@ -24,9 +24,9 @@ cat << EOF
 USAGE: $0 <arguments>
 
 OPTIONS:
-  --create LINK     Creates a chroot enviroment.
-  --enter           Enters chroot enviroment.
-  --help            Displays this help message.
+  -c, --create URL      Creates a chroot enviroment.
+  -e, --enter           Enters chroot enviroment.
+  -h, --help            Displays this help message.
 
 EOF
 }
@@ -41,7 +41,7 @@ msg(){
 }
 
 case $1 in
-    --create)
+    -c|--create)
         asroot
         [[ -z $2 ]] && err "Specify the link of Arch Linux bootstrap tarball!"
         msg "Creating chroot directory..."
@@ -78,18 +78,18 @@ case $1 in
 	cp /usr/local/share/archbox/chroot_setup.bash $CHROOT/chroot_setup
 	chroot $CHROOT /bin/bash -c "sh /chroot_setup"
     ;;
-    --enter)
+    -e|--enter)
 	storeenv
 	copyresolv
         $PRIV /usr/local/share/archbox/bin/archbox enter
 	;;
-    --help)
+    -h|--help)
         help_text
     ;;
     "")
         help_text
     ;;
-    --*)
+    -*)
         err "Unknown option: $1"
     ;;
     *)
