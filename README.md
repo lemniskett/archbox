@@ -65,4 +65,4 @@ Although /run is mounted in chroot enviroment on boot, XDG_RUNTIME_DIR is not vi
 ```
 archbox --remount-run
 ```
-Tested in Void Linux musl
+after user login. Tested in Void Linux musl.
