@@ -32,7 +32,7 @@ If you use runit, copy archbox folder inside ```runit/``` to whatever your distr
 You may want to add this if you don't want to run archbox chroot without password :
 #### Sudo
 ```
-%wheel  ALL=(root) NOPASSWD: /usr/local/share/archbox/bin/archbox,/usr/local/share/archbox/bin/copyresolv
+%wheel  ALL=(root) NOPASSWD: /usr/local/share/archbox/bin/archbox,/usr/local/share/archbox/bin/copyresolv,/usr/local/share/archbox/bin/remount_run
 ```
 #### Doas
 ```

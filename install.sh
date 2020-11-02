@@ -5,4 +5,5 @@ install -v -D -m 755 ./archbox.bash /usr/local/bin/archbox
 [[ ! -e /etc/archbox.conf ]] && install -v -D -m 755 ./archbox.conf /etc/archbox.conf
 install -v -D -m 755 ./copyresolv.bash /usr/local/share/archbox/bin/copyresolv
 install -v -D -m 755 ./archboxcommand.bash /usr/local/share/archbox/bin/archbox
+install -v -D -m 755 ./remount_run.bash /usr/local/share/archbox/bin/remount_run
 install -v -D -m 755 ./chroot_setup.bash /usr/local/share/archbox/chroot_setup.bash

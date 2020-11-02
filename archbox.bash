@@ -27,6 +27,7 @@ OPTIONS:
   -c, --create URL      Creates a chroot enviroment.
   -e, --enter           Enters chroot enviroment.
   -h, --help            Displays this help message.
+  --remount-run		Remount /run in chroot enviroment.
 
 EOF
 }
@@ -82,6 +83,9 @@ case $1 in
 	storeenv
 	copyresolv
         $PRIV /usr/local/share/archbox/bin/archbox enter
+	;;
+    --remount-run)
+	$PRIV /usr/local/share/archbox/bin/remount_run
 	;;
     -h|--help)
         help_text
