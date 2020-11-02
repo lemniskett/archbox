@@ -10,6 +10,8 @@ Before creating chroot enviroment, edit your username in ```/etc/archbox.conf```
 ```
 sudo archbox --create <archlinux tarball download link>
 ```
+### Removing chroot enviroment
+**IMPORTANT**, Make sure you've unmounted everything in chroot enviroment, if you're unsure which partitions must be unmounted, remove the init script and reboot, then delete the folder.
 ### Entering chroot enviroment
 To enter chroot, do :
 ```
