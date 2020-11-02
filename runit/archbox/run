@@ -10,12 +10,6 @@ mount -R /dev $CHROOT/dev
 mount -R /run $CHROOT/run
 mount -R /lib/modules $CHROOT/lib/modules
 mount -R /boot $CHROOT/boot
-
-# Allow chroot enviroment to access host's machine id
-# to be able to connect to host's pulseaudio.
-# Comment if the chroot enviroment is not able to connect 
-# to host's pulseaudio, you may want to start pulseaudio in 
-# the chroot instead.
 mount -R /var/lib/dbus $CHROOT/var/lib/dbus
 
 # Runit will re-execute scripts those are finished,
