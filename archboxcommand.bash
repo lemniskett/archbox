@@ -7,5 +7,5 @@ REQ_ENV="DBUS_SESSION_BUS_ADDRESS=$(cat /tmp/archbox_dbus_session_address) XDG_R
 ENV="$REQ_ENV $ENV_VAR"
 
 COMMAND=$(echo $@ | tr ' ' '\ ')
-[[ $1 = "enter" ]] && chroot $CHROOT /sbin/env $ENV /bin/su $USER \
+[[ $1 = "enter" ]] && (chroot $CHROOT /sbin/env $ENV /bin/su $USER; exit 0) \
     || chroot $CHROOT /bin/su -c "env $ENV $COMMAND" $USER
