@@ -15,8 +15,7 @@ pacman-key --populate archlinux
 msg "Installing essential packages..."
 pacman -Syu base base-devel xorg pulseaudio --noconfirm
 msg "Creating user account..."
-echo "Enter the name of the user account, you may want it to be the same as the host os so it will share the same home directory"
-read CHROOT_USER
+CHROOT_USER="$(cat /tmp/archbox_user)"
 useradd -m $CHROOT_USER
 gpasswd -a $CHROOT_USER wheel
 echo "Enter root password"

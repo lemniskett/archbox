@@ -77,6 +77,7 @@ case $1 in
         mount -R /lib/modules $CHROOT/lib/modules
         mount -R /boot $CHROOT/boot
 	cp /usr/local/share/archbox/chroot_setup.bash $CHROOT/chroot_setup
+	echo $USER > /tmp/archbox_user
 	chroot $CHROOT /bin/bash -c "sh /chroot_setup"
     ;;
     -e|--enter)
