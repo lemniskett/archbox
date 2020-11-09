@@ -31,7 +31,7 @@ echo "Enter your timezone, for example : \"Asia/Jakarta\""
 while true; do
 	read TIMEZONE \
 		&& [[ -e /usr/share/zoneinfo/$TIMEZONE ]] \
-		&& ln -s /etc/localtime \
+		&& ln -s /usr/share/zoneinfo/$TIMEZONE /etc/localtime \
 		&& break \
 		|| err "Timezone not found"
 done
