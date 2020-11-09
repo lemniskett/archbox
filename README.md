@@ -10,6 +10,9 @@ Before creating chroot enviroment, edit your username in ```/etc/archbox.conf```
 ```
 sudo archbox --create <archlinux tarball download link>
 ```
+### Configuring filesystem automount
+Execute ```/usr/local/share/archbox/bin/archboxinit``` on boot.
+either create an init service, or create a @reboot cronjob.
 ### Removing chroot enviroment
 **IMPORTANT**, Make sure you've unmounted everything in chroot enviroment, if you're unsure which partitions must be unmounted, remove the init script and reboot, then delete the folder.
 ### Entering chroot enviroment
@@ -26,8 +29,6 @@ for example, to update chroot, do :
 ```
 archbox sudo pacman -Syu
 ```
-### Automount filesystem
-If you use runit, copy archbox folder inside ```runit/``` to whatever your distro store runit services and symlink it to whatever your distro store running runit services, if you don't use runit, you may need to create your own init script, or create a cronjob that runs on boot.
 ### Optional steps
 You may want to add this if you don't want to run archbox chroot without password :
 #### Sudo
@@ -39,10 +40,12 @@ You may want to add this if you don't want to run archbox chroot without passwor
 Idk you're on your own
 ```
 ### Misc
+#### Systemd services
+Use ```servicectl``` command to manage systemd services.
 #### Lauching apps via rofi
 Instead of opening terminal everytime you want to run application inside chroot, you may want to launch rofi inside chroot, install rofi and do :
 ```
-archbox rofi <rofi options>
+archbox rofi -show drun
 ```
 #### Prompt
 If you use bash with nerd font you could add a nice little Arch Linux icon in your prompt, add :
