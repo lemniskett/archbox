@@ -11,7 +11,4 @@ mount -R /run $CHROOT/run
 mount -R /lib/modules $CHROOT/lib/modules
 mount -R /boot $CHROOT/boot
 mount -R /var/lib/dbus $CHROOT/var/lib/dbus
-
-# Runit will re-execute scripts those are finished,
-# so we create a neverending loop.
-while true; do sleep 10800; done
+chroot $CHROOT /usr/local/bin/serviced

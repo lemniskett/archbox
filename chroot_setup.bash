@@ -14,6 +14,13 @@ pacman-key --init
 pacman-key --populate archlinux
 msg "Installing essential packages..."
 pacman -Syu base base-devel xorg pulseaudio --noconfirm
+msg "Installing servicectl..."
+mkdir -p /usr/local/share/servicectl/enabled
+curl -L 'https://raw.githubusercontent.com/lemniskett/servicectl/master/servicectl' > /usr/local/share/servicectl/servicectl 2>/dev/null
+curl -L 'https://raw.githubusercontent.com/lemniskett/servicectl/master/serviced' > /usr/local/share/servicectl/serviced 2>/dev/null
+chmod +x /usr/local/share/servicectl/service{d,ctl}
+ln -s /usr/local/share/servicectl/servicectl /usr/local/bin/servicectl
+ln -s /usr/local/share/servicectl/serviced /usr/local/bin/serviced
 msg "Creating user account..."
 CHROOT_USER="$(cat /tmp/archbox_user)"
 useradd -m $CHROOT_USER
@@ -27,3 +34,4 @@ while true; do
 	passwd $CHROOT_USER && break
 done
 sed -i 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
+echo "Don't forget to run /usr/local/share/archbox/bin/archboxinit in host on boot"
