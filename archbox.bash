@@ -100,7 +100,6 @@ case $1 in
     *)
 	storeenv
     	copyresolv
-        COMMAND=$(echo $@ | tr ' ' '\ ')
-	$PRIV /usr/local/share/archbox/bin/archbox $COMMAND
+	$PRIV /usr/local/share/archbox/bin/archbox $@
     ;;
 esac
