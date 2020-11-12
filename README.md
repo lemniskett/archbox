@@ -81,3 +81,13 @@ archbox --remount-run
 ```
 after user login, Also if you use Void Musl, you need to kill every process that runs in XDG_RUNTIME_DIR when you log out, if you use ```startx``` you need to reinstall archbox with ```--exp``` flag and use ```startx-killxdg``` instead of ```startx```.
 Tested in Void Linux musl and Alpine Linux.
+
+#### Polkit
+```pkexec``` is kind of tricky to make it work in chroot, if you use rofi to launch GUI applications in chroot, you may not able to launch any ```.desktop``` files with ```Exec=pkexec...``` in it. If you really want them to work, you can do :
+```
+sudo ln -s /usr/bin/sudo /usr/bin/pkexec
+```
+in chroot and prevent pacman from restoring ```/usr/bin/pkexec``` by editing ```NoExtract``` in ```/etc/pacman.conf```.
+
+#### No sudo password in chroot by default.
+You could use ```sudo``` in archbox, but you'll have no way to enter the password when doing e.g. ```archbox sudo pacman -Syu```. also you could enter the password if you do ```archbox -e < <(echo $COMMAND)```, but that would disable stdin entirely during $COMMAND.
