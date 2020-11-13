@@ -8,11 +8,14 @@ case $1 in
 		mount -t proc /proc $CHROOT/proc
 		mount -R /tmp $CHROOT/tmp
 		mount -R /sys $CHROOT/sys
+		mount --make-rslave $CHROOT/sys
 		mount -R /dev $CHROOT/dev
+		mount --make-rslave $CHROOT/dev
 		mount -R /run $CHROOT/run
 		mount -R /lib/modules $CHROOT/lib/modules
 		mount -R /boot $CHROOT/boot
 		mount -R /var/lib/dbus $CHROOT/var/lib/dbus
+		mount -R / $CHROOT/var/host
 		chroot $CHROOT /usr/local/bin/serviced >/dev/null 2>&1
 		exit 0
 	;;
@@ -26,6 +29,7 @@ case $1 in
 		umount -R $CHROOT/lib/modules
 		umount -R $CHROOT/boot
 		umount -R $CHROOT/var/lib/dbus
+		umount -R $CHROOT/var/host
 		exit 0
 	;;
 esac
