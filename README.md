@@ -85,7 +85,7 @@ Tested in Void Linux musl and Alpine Linux.
 #### Polkit
 ```pkexec``` is kind of tricky to make it work in chroot, if you use rofi to launch GUI applications in chroot, you may not able to launch any ```.desktop``` files with ```Exec=pkexec...``` in it. If you really want them to work, you can do :
 ```
-sudo ln -s /usr/bin/sudo /usr/bin/pkexec
+sudo ln -sf /usr/bin/sudo /usr/bin/pkexec
 ```
 in chroot and prevent pacman from restoring ```/usr/bin/pkexec``` by editing ```NoExtract``` in ```/etc/pacman.conf```.
 
