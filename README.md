@@ -37,7 +37,9 @@ You may want to add this if you don't want to run archbox chroot without passwor
 ```
 #### Doas
 ```
-Idk you're on your own
+permit nopass :wheel as root cmd /usr/local/share/archbox/bin/archbox
+permit nopass :wheel as root cmd /usr/local/share/archbox/bin/copyresolv
+permit nopass :wheel as root cmd /usr/local/share/archbox/bin/remount_run
 ```
 ### Misc
 #### Systemd services
