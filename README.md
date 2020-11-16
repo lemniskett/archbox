@@ -54,7 +54,7 @@ To start services immediately, in archbox do :
 ```
 sudo servicectl start <service name>
 ```
-This isn't actually uses systemd to start services, rather it parses systemd .service files and executes it. 
+This isn't actually using systemd to start services, rather it parses systemd .service files and executes it. 
 #### Lauching apps via rofi
 Instead of opening terminal everytime you want to run application inside chroot, you may want to launch rofi inside chroot, install rofi and do :
 ```
