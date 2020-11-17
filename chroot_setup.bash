@@ -48,4 +48,4 @@ while true; do
 	passwd $CHROOT_USER && break
 done
 sed -i 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
-echo "Don't forget to run /usr/local/share/archbox/bin/archboxinit in host on boot"
+echo "Don't forget to run '/usr/local/share/archbox/bin/archboxinit start' in host on boot"
