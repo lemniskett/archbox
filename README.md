@@ -11,8 +11,24 @@ Before creating chroot enviroment, edit your username in ```/etc/archbox.conf```
 sudo archbox --create <archlinux tarball download link>
 ```
 ### Configuring filesystem automount
-Execute ```/usr/local/share/archbox/bin/archboxinit``` on boot.
-either create an init service, or create a @reboot cronjob.
+Execute ```/usr/local/share/archbox/bin/archboxinit start``` on boot.
+If you use systemd, you can create a systemd service with this syntax below :
+```
+[Unit]
+Description=Archbox init
+PartOf=multi-user.target
+
+[Service]
+ExecStart=/usr/local/share/archbox/bin/archboxinit start
+Type=oneshot
+User=root
+
+[Install]
+WantedBy=multi-user.target
+```
+Thanks to [@SamsiFPV](https://github.com/SamsiFPV)
+
+If you don't use systemd, either create your own init service, or create a @reboot cronjob.
 ### Removing chroot enviroment
 **IMPORTANT**, Make sure you've unmounted everything in chroot enviroment, if you're unsure which partitions must be unmounted, remove the init script and reboot, then delete the folder.
 ### Entering chroot enviroment
