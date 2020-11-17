@@ -3,6 +3,11 @@ Installs Arch Linux inside a chroot enviroment.
 ## Why?
 Ever since I'm running some niche distros like Void, Solus, I had a problem finding softwares I need in their not-so-large repositories, also I don't like how flatpak and snap works. so i decided to create an Arch Linux chroot enviroment everytime I distrohop. Why Arch Linux? They have a really, really good repositories, oh and don't mention how big AUR is.
 ## Installation
+### Dependencies
+- Bash
+- Sed
+- Wget
+- Tar
 ### Installing Archbox
 It's pretty easy, just run ```install.sh``` as root.
 ### Installing chroot enviroment
