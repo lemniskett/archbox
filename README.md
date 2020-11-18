@@ -11,7 +11,7 @@ Ever since I'm running some niche distros like Void, Solus, I had a problem find
 ### Installing Archbox
 It's pretty easy, just run ```install.sh``` as root.
 ### Installing chroot enviroment
-Before creating chroot enviroment, edit your username in ```/etc/archbox.conf```, then do :
+Before creating chroot enviroment, edit your chroot username in ```/etc/archbox.conf```, then do :
 ```
 sudo archbox --create <archlinux tarball download link>
 ```
