@@ -97,7 +97,9 @@ An example with multiple enviroment variables.
 ENV_VAR="QT_QPA_PLATFORMTHEME=qt5ct GTK_CSD=0 LD_PRELOAD=/var/home/lemniskett/git_repo/gtk3-nocsd/libgtk3-nocsd.so.0"
 ```
 ### Known issues
-#### Musl-based distros.
+#### PulseAudio refused to connect
+This can be caused by different dbus machine-id between chroot and host, copying ```/etc/machine-id``` from host to chroot should do the job.
+#### Musl-based distros
 Although /run is mounted in chroot enviroment on boot, XDG_RUNTIME_DIR is not visible in chroot enviroment, remounting /run will make it visible. do :
 ```
 archbox --remount-run
