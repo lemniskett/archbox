@@ -33,7 +33,7 @@ while true; do
 		&& [[ -e /usr/share/zoneinfo/$TIMEZONE ]] \
 		&& ln -s /usr/share/zoneinfo/$TIMEZONE /etc/localtime \
 		&& break \
-		|| err "Timezone not found"
+		|| echo "Timezone not found, enter it again."
 done
 msg "Creating user account..."
 CHROOT_USER="$(cat /tmp/archbox_user)"
