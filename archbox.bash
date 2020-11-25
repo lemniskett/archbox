@@ -50,7 +50,7 @@ case $1 in
         cd $INSTALL_PATH
         msg "Downloading Arch Linux tarball..."
         checkdep wget
-        wget -q --show-progress -O archlinux.tar.gz $2
+        while wget -O archlinux.tar.gz $2; do break; done
         msg "Extracting the tarball..."
 	checkdep tar
         tar xzf archlinux.tar.gz
