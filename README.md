@@ -104,7 +104,12 @@ Although /run is mounted in chroot enviroment on boot, XDG_RUNTIME_DIR is not vi
 ```
 archbox --remount-run
 ```
-after user login, Also if you use Void Musl, you need to kill every process that runs in XDG_RUNTIME_DIR when you log out, if you use ```startx``` you need to reinstall archbox with ```--exp``` flag and use ```startx-killxdg``` instead of ```startx```.
+after user login, Also if you use Void Musl, you need to kill every process that runs in XDG_RUNTIME_DIR when you log out, You need to reinstall archbox with ```--exp``` flag and use ```startx-killxdg``` instead of ```startx```, or run :
+```
+/usr/local/share/archbox/bin/remount_run killxdg
+```
+on logout. you can put it in ```/etc/gdm/PostSession/Default``` if you use GDM
+
 Tested in Void Linux musl and Alpine Linux.
 
 #### Polkit
