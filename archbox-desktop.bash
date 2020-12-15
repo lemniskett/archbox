@@ -9,6 +9,7 @@ install_desktop(){
             && cp $CHROOT/$(archbox readlink /usr/share/applications/$i) ~/.local/share/applications/archbox \
             || cp $CHROOT/usr/share/applications/$i ~/.local/share/applications/archbox 
         sed -i 's/Exec=/Exec=archbox\ /g' ~/.local/share/applications/archbox/$i
+        sed -1 '/TryExec=/d' ~/.local/share/applications/archbox/$i
     done
 }
 
@@ -44,6 +45,7 @@ case $1 in
     ;;
     *)
         checkdep zenity
+        checkdep sed
         list_desktop="$(archbox ls --color=none -1 /usr/share/applications)"
         zenity_entry="$(echo $list_desktop | sed 's/\ /\ FALSE\ /g')"
         selected_entry=$(zenity --list --checklist --height=500 --width=450 \
