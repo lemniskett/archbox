@@ -27,7 +27,7 @@ OPTIONS:
   -c, --create URL      Creates a chroot enviroment.
   -e, --enter           Enters chroot enviroment.
   -h, --help            Displays this help message.
-  --remount-run		Remount /run in chroot enviroment.
+  --remount-run         Remount /run in chroot enviroment.
 
 EOF
 }
