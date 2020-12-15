@@ -8,6 +8,7 @@ Ever since I'm running some niche distros like Void, Solus, I had a problem find
 - Sed
 - Wget
 - Tar
+- Zenity (Optional: for .desktop entry manager GUI)
 ### Installing Archbox
 It's pretty easy, just run ```install.sh``` as root.
 ### Installing chroot enviroment
