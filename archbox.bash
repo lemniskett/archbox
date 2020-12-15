@@ -52,7 +52,7 @@ case $1 in
         checkdep wget
         while true; do wget -O archlinux.tar.gz $2 && break; done
         msg "Extracting the tarball..."
-	checkdep tar
+	    checkdep tar
         tar xzf archlinux.tar.gz
         msg "Enabling internet connection in chroot enviroment..."
         cp /etc/resolv.conf $CHROOT/etc/resolv.conf

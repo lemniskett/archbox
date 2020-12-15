@@ -12,6 +12,15 @@ install_desktop(){
     done
 }
 
+checkdep(){
+    which $1 >/dev/null 2>&1 || err "Install $1!"
+}
+
+err(){
+    echo "$(tput bold)$(tput setaf 1)==> $@ $(tput sgr0)"
+    exit 1
+}
+
 help_text(){
 cat << EOF
 USAGE: $0 <arguments>
@@ -30,7 +39,11 @@ case $1 in
     -h|--help)
         help_text
     ;;
+    -*)
+        err "Unknown option: $1"
+    ;;
     *)
+        checkdep zenity
         list_desktop="$(archbox ls --color=none -1 /usr/share/applications)"
         zenity_entry="$(echo $list_desktop | sed 's/\ /\ FALSE\ /g')"
         selected_entry=$(zenity --list --checklist --height=500 --width=450 \
