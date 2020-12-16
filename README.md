@@ -76,9 +76,11 @@ To start services immediately, in archbox do :
 ```
 sudo servicectl start <service name>
 ```
-This isn't actually using systemd to start services, rather it parses systemd .service files and executes it. 
+This isn't actually using systemd to start services, rather it parses systemd .service files and executes it.
+#### Desktop entries
+Use ```archbox-desktop``` to install desktop entries in chroot to host (installed to ```~/.local/share/applications/archbox```)
 #### Lauching apps via rofi
-Instead of opening terminal everytime you want to run application inside chroot, you may want to launch rofi inside chroot, install rofi and do :
+Instead of opening terminal or installing desktop entries everytime you want to run application inside chroot, you may want to launch rofi inside chroot, install rofi and do :
 ```
 archbox rofi -show drun
 ```
