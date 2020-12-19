@@ -9,7 +9,7 @@ install_desktop(){
             && cp $CHROOT/$(archbox readlink /usr/share/applications/$i) ~/.local/share/applications/archbox \
             || cp $CHROOT/usr/share/applications/$i ~/.local/share/applications/archbox 
         sed -i 's/Exec=/Exec=archbox\ /g' ~/.local/share/applications/archbox/$i
-        sed -1 '/TryExec=/d' ~/.local/share/applications/archbox/$i
+        sed -i '/TryExec=/d' ~/.local/share/applications/archbox/$i
     done
 }
 
@@ -41,7 +41,10 @@ case $1 in
         install_desktop ${@:2}
         ;;
     -r|--remove)
-        eval rm ~/.local/share/applications/archbox/{$selected_entry}
+	selected_entry=${@:2}
+	for i in $selected_entry; do
+	    rm ~/.local/share/applications/archbox/$i
+	done
         ;;
     -h|--help)
         help_text
@@ -67,7 +70,8 @@ case $1 in
                 --title="Archbox Desktop Manager" \
                 --text "Select .desktop entries those you want to install" \
                 --column "Select" --column "Applications" \
-                FALSE $zenity_entry | sed 's/|/\ /g')
+		FALSE $zenity_entry | sed 's/|/\ /g')
+		echo $selected_entry
                 [[ -z $selected_entry ]] && exit 1
                 install_desktop $selected_entry
                 exit 0
@@ -81,9 +85,11 @@ case $1 in
                 --title="Archbox Desktop Manager" \
                 --text "Select .desktop entries those you want to remove" \
                 --column "Select" --column "Applications" \
-                FALSE $zenity_entry | sed 's/|/\,/g')
+                FALSE $zenity_entry | sed 's/|/\ /g')
                 [[ -z $selected_entry ]] && exit 1
-                eval rm ~/.local/share/applications/archbox/{$selected_entry}
+		for i in $selected_entry; do
+            	    rm ~/.local/share/applications/archbox/$i
+	        done
                 exit $?
                 ;;
         esac
