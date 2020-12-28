@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 mkdir -p /usr/local/share/archbox/bin
 install -v -D -m 755 ./archbox.bash /usr/local/bin/archbox

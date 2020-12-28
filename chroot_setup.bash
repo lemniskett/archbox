@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 err(){
     echo "$(tput bold)$(tput setaf 1)==> $@ $(tput sgr0)"
