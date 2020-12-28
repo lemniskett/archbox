@@ -28,6 +28,7 @@ OPTIONS:
   -e, --enter           Enters chroot enviroment.
   -h, --help            Displays this help message.
   --remount-run         Remount /run in chroot enviroment.
+  --mount-runtime-only  Mount XDG_RUNTIME_DIR to chroot enviroment.
 
 EOF
 }
@@ -69,7 +70,7 @@ case $1 in
         mount -R /tmp $CHROOT/tmp
         mount -R /sys $CHROOT/sys
         mount -R /dev $CHROOT/dev
-        mount -R /run $CHROOT/run
+        [[ $MOUNT_RUN = "yes" ]] && mount -R /run $CHROOT/run
         mount --make-rslave $CHROOT/dev
         mount --make-rslave $CHROOT/sys
         mkdir -p $CHROOT/var/lib/dbus
@@ -79,7 +80,7 @@ case $1 in
         mount -R /boot $CHROOT/boot
 	cp /usr/local/share/archbox/chroot_setup.bash $CHROOT/chroot_setup
 	echo $USER > /tmp/archbox_user
-	chroot $CHROOT /bin/bash -c "/bin/sh /chroot_setup"
+	chroot $CHROOT /bin/bash -c "/chroot_setup"
     ;;
     -e|--enter)
 	storeenv
@@ -88,6 +89,9 @@ case $1 in
 	;;
     --remount-run)
 	$PRIV /usr/local/share/archbox/bin/remount_run
+	;;
+    --mount-runtime-only)
+	$PRIV /usr/local/share/archbox/bin/remount_run runtimeonly
 	;;
     -h|--help)
         help_text

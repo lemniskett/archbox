@@ -11,7 +11,7 @@ case $1 in
 		mount --make-rslave $CHROOT/sys
 		mount -R /dev $CHROOT/dev
 		mount --make-rslave $CHROOT/dev
-		mount -R /run $CHROOT/run
+		[[ $MOUNT_RUN = "yes" ]] && mount -R /run $CHROOT/run
 		mount -R /lib/modules $CHROOT/lib/modules
 		mount -R /boot $CHROOT/boot
 		mount -R /var/lib/dbus $CHROOT/var/lib/dbus
@@ -25,7 +25,7 @@ case $1 in
 		umount -R $CHROOT/tmp
 		umount -R $CHROOT/sys
 		umount -R $CHROOT/dev
-		umount -R $CHROOT/run
+		[[ $MOUNT_RUN = "yes" ]] && umount -R $CHROOT/run
 		umount -R $CHROOT/lib/modules
 		umount -R $CHROOT/boot
 		umount -R $CHROOT/var/lib/dbus
