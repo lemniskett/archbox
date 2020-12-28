@@ -9,6 +9,7 @@ msg(){
     echo "$(tput bold)$(tput setaf 2)==> $@ $(tput sgr0)"
 }
 
+source /etc/profile
 msg "Initializing pacman keyrings..."
 pacman-key --init
 pacman-key --populate archlinux
