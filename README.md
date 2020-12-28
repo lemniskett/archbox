@@ -100,6 +100,19 @@ An example with multiple enviroment variables.
 ENV_VAR="QT_QPA_PLATFORMTHEME=qt5ct GTK_CSD=0 LD_PRELOAD=/var/home/lemniskett/git_repo/gtk3-nocsd/libgtk3-nocsd.so.0"
 ```
 ### Known issues
+#### NixOS-specific issues
+Mounting ```/run``` somehow breaks NixOS, set ```MOUNT_RUN``` in ```/etc/archbox.conf``` to anything other than ```yes``` to disable mounting ```/run```, then do :
+```
+archbox --mount-runtime-only
+```
+after user login to make XDG runtime directory accessible to chroot enviroment. make sure dbus unix:path is in XDG runtime directory too.
+```
+$ echo $XDG_RUNTIME_DIR
+/run/user/1000
+$ echo $DBUS_SESSION_BUS_ADDRESS
+unix:path=/run/user/1000/bus
+```
+
 #### PulseAudio refused to connect
 This can be caused by different dbus machine-id between chroot and host, copying ```/etc/machine-id``` from host to chroot should do the job.
 #### Musl-based distros
