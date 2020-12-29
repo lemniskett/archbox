@@ -10,6 +10,7 @@ case $1 in
 	;;
 	runtimeonly)
 	mkdir -p $CHROOT/$(cat /tmp/archbox_xdg_runtime_dir)
+	umount -Rl $CHROOT/$(cat /tmp/archbox_xdg_runtime_dir)
 	mount --rbind $(cat /tmp/archbox_xdg_runtime_dir) $CHROOT/$(cat /tmp/archbox_xdg_runtime_dir)
 	exit $?
 	;;
