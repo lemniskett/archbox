@@ -38,13 +38,17 @@ EOF
 
 case $1 in 
     -i|--install)
+	checkdep update-desktop-database
         install_desktop ${@:2}
+	update-desktop-database
         ;;
     -r|--remove)
+	checkdep update-desktop-database
 	selected_entry=${@:2}
 	for i in $selected_entry; do
 	    rm ~/.local/share/applications/archbox/$i
 	done
+	update-desktop-database
         ;;
     -h|--help)
         help_text
@@ -58,6 +62,7 @@ case $1 in
     *)
         checkdep zenity
         checkdep sed
+	checkdep update-desktop-database
         action="$(zenity --list --radiolist --title 'Archbox Desktop Manager' \
             --height=200 --width=450 --column 'Select' --column 'Action' \
             --text 'What do you want to do?' \
@@ -74,6 +79,7 @@ case $1 in
 		echo $selected_entry
                 [[ -z $selected_entry ]] && exit 1
                 install_desktop $selected_entry
+		update-desktop-database
                 exit 0
                 ;;
             'Remove desktop entries')
@@ -90,6 +96,7 @@ case $1 in
 		for i in $selected_entry; do
             	    rm ~/.local/share/applications/archbox/$i
 	        done
+		update-desktop-database
                 exit $?
                 ;;
         esac
