@@ -53,7 +53,7 @@ case $1 in
         checkdep wget
         while true; do wget -O archlinux.tar.gz $2 && break; done
         msg "Extracting the tarball..."
-	    checkdep tar
+        checkdep tar
         tar xzf archlinux.tar.gz
         msg "Enabling internet connection in chroot enviroment..."
         cp /etc/resolv.conf $CHROOT/etc/resolv.conf
@@ -78,33 +78,40 @@ case $1 in
         mkdir -p $CHROOT/lib/modules
         mount -R /lib/modules $CHROOT/lib/modules
         mount -R /boot $CHROOT/boot
-	cp /usr/local/share/archbox/chroot_setup.bash $CHROOT/chroot_setup
-	echo $USER > /tmp/archbox_user
-	chroot $CHROOT /bin/bash -c "/chroot_setup"
+        cp /usr/local/share/archbox/chroot_setup.bash $CHROOT/chroot_setup
+        echo $USER > /tmp/archbox_user
+        chroot $CHROOT /bin/bash -c "/chroot_setup"
+        exit $?
     ;;
     -e|--enter)
-	storeenv
-	copyresolv
+        storeenv
+        copyresolv
         $PRIV /usr/local/share/archbox/bin/archbox enter
-	;;
+        exit $?
+    ;;
     --remount-run)
-	$PRIV /usr/local/share/archbox/bin/remount_run
-	;;
+        $PRIV /usr/local/share/archbox/bin/remount_run
+        exit $?
+    ;;
     --mount-runtime-only)
-	$PRIV /usr/local/share/archbox/bin/remount_run runtimeonly
-	;;
+        $PRIV /usr/local/share/archbox/bin/remount_run runtimeonly
+        exit $?
+    ;;
     -h|--help)
         help_text
+        exit 0
     ;;
     "")
         help_text
+        exit 1
     ;;
     -*)
         err "Unknown option: $1"
     ;;
     *)
-	storeenv
-    	copyresolv
-	$PRIV /usr/local/share/archbox/bin/archbox $@
+        storeenv
+        copyresolv
+        $PRIV /usr/local/share/archbox/bin/archbox $@
+        exit $?
     ;;
 esac

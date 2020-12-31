@@ -38,31 +38,36 @@ EOF
 
 case $1 in 
     -i|--install)
-	checkdep update-desktop-database
+        checkdep update-desktop-database
         install_desktop ${@:2}
-	update-desktop-database
-        ;;
+        update-desktop-database
+        exit $?
+    ;;
     -r|--remove)
-	checkdep update-desktop-database
-	selected_entry=${@:2}
-	for i in $selected_entry; do
-	    rm ~/.local/share/applications/archbox/$i
-	done
-	update-desktop-database
-        ;;
+        checkdep update-desktop-database
+        selected_entry=${@:2}
+        for i in $selected_entry; do
+            rm ~/.local/share/applications/archbox/$i
+        done
+        update-desktop-database
+        exit $?
+    ;;
     -h|--help)
         help_text
-        ;;
+        exit 0
+    ;;
     -l|--list)
         archbox ls -1 --color=none /usr/share/applications
-        ;;
+        exit $?
+    ;;
     -s|--list-installed)
         ls -1 --color=none ~/.local/share/applications/archbox
-        ;;
+        exit $?
+    ;;
     *)
         checkdep zenity
         checkdep sed
-	checkdep update-desktop-database
+        checkdep update-desktop-database
         action="$(zenity --list --radiolist --title 'Archbox Desktop Manager' \
             --height=200 --width=450 --column 'Select' --column 'Action' \
             --text 'What do you want to do?' \
@@ -72,16 +77,15 @@ case $1 in
                 list_desktop="$(archbox ls --color=none -1 /usr/share/applications)"
                 zenity_entry="$(echo $list_desktop | sed 's/\ /\ FALSE\ /g')"
                 selected_entry=$(zenity --list --checklist --height=500 --width=450 \
-                --title="Archbox Desktop Manager" \
-                --text "Select .desktop entries those you want to install" \
-                --column "Select" --column "Applications" \
-		FALSE $zenity_entry | sed 's/|/\ /g')
-		echo $selected_entry
+                    --title="Archbox Desktop Manager" \
+                    --text "Select .desktop entries those you want to install" \
+                    --column "Select" --column "Applications" \
+                    FALSE $zenity_entry | sed 's/|/\ /g')
                 [[ -z $selected_entry ]] && exit 1
                 install_desktop $selected_entry
-		update-desktop-database
+                update-desktop-database
                 exit 0
-                ;;
+            ;;
             'Remove desktop entries')
                 list_desktop="$(ls --color=none -1 ~/.local/share/applications/archbox)"
                 [[ -z $list_desktop ]] && zenity --info --title "Archbox Desktop Manager" \
@@ -93,12 +97,12 @@ case $1 in
                 --column "Select" --column "Applications" \
                 FALSE $zenity_entry | sed 's/|/\ /g')
                 [[ -z $selected_entry ]] && exit 1
-		for i in $selected_entry; do
-            	    rm ~/.local/share/applications/archbox/$i
-	        done
-		update-desktop-database
+                for i in $selected_entry; do
+                    rm ~/.local/share/applications/archbox/$i
+                done
+                update-desktop-database
                 exit $?
-                ;;
+            ;;
         esac
         exit 1
     ;;
