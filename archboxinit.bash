@@ -2,34 +2,51 @@
 
 source /etc/archbox.conf
 
+msg(){
+    echo "$(tput bold)$(tput setaf 2)==> $@ $(tput sgr0)"
+}
+
+rbind() {
+    [[ $(mount | grep $CHROOT$1) ]] && msg "$CHROOT$1 already mounted." \
+        || (mount -R $1 $CHROOT$1 && msg "$CHROOT$1 mounted!")
+    [[ $2 = "make-rslave" ]] && mount --make-rslave $CHROOT$1
+}
+
+bindproc() {
+    [[ $(mount | grep $CHROOT/proc) ]] && msg "$CHROOT already mounted." \
+        || (mount -t proc /proc $CHROOT/proc && msg "$CHROOT/proc mounted!")
+}
+
+rmbind() {
+    umount_args=-R
+    [[ $LAZY_UMOUNT = "yes" ]] && umount_args=-Rl
+    [[ $(mount | grep $CHROOT$1) ]] && umount $umount_args $CHROOT$1 \
+        && msg "$CHROOT$1 unmounted!"
+}
+
 case $1 in
     start)
-        mount -R /home $CHROOT/home
-        mount -t proc /proc $CHROOT/proc
-        mount -R /tmp $CHROOT/tmp
-        mount -R /sys $CHROOT/sys
-        mount --make-rslave $CHROOT/sys
-        mount -R /dev $CHROOT/dev
-        mount --make-rslave $CHROOT/dev
-        [[ $MOUNT_RUN = "yes" ]] && mount -R /run $CHROOT/run
-        mount -R /lib/modules $CHROOT/lib/modules
-        mount -R /boot $CHROOT/boot
-        mount -R /var/lib/dbus $CHROOT/var/lib/dbus
-        mount -R / $CHROOT/var/host
+        rbind /home
+        bindproc
+        rbind /tmp
+        rbind /sys make-rslave
+        rbind /dev make-rslave
+        [[ $MOUNT_RUN = "yes" ]] && rbind /run
+        [[ $MOUNT_MOD = "yes" ]] && rbind /lib/modules && rbind /boot
+        [[ -d /var/lib/dbus ]] && rbind /var/lib/dbus
         chroot $CHROOT /usr/local/bin/serviced >/dev/null 2>&1
         exit 0
     ;;
     stop)
-        umount -R $CHROOT/home
-        umount -R $CHROOT/proc
-        umount -R $CHROOT/tmp
-        umount -R $CHROOT/sys
-        umount -R $CHROOT/dev
-        [[ $MOUNT_RUN = "yes" ]] && umount -R $CHROOT/run
-        umount -R $CHROOT/lib/modules
-        umount -R $CHROOT/boot
-        umount -R $CHROOT/var/lib/dbus
-        umount -R $CHROOT/var/host
+        rmbind /home
+        rmbind /proc
+        rmbind /tmp
+        rmbind /sys
+        rmbind /dev
+        [[ $MOUNT_RUN = "yes" ]] && rmbind /run
+        [[ $MOUNT_MOD = "yes" ]] && rmbind /lib/modules && rmbind /boot
+        rmbind /var/lib/dbus
+        kill $(pidof serviced) 2>/dev/null
         exit 0
     ;;
 esac
