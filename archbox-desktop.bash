@@ -18,7 +18,7 @@ checkdep(){
 }
 
 err(){
-    echo "$(tput bold)$(tput setaf 1)==> $@ $(tput sgr0)"
+    echo "$(tput bold)$(tput setaf 1)==> $@ $(tput sgr0)" 1>&2
     exit 1
 }
 

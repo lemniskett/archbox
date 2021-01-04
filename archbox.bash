@@ -34,7 +34,7 @@ EOF
 }
 
 err(){
-    echo "$(tput bold)$(tput setaf 1)==> $@ $(tput sgr0)"
+    echo "$(tput bold)$(tput setaf 1)==> $@ $(tput sgr0)" 1>&2
     exit 1
 }
 
@@ -65,19 +65,7 @@ case $1 in
         checkdep sed
         sed -i 's/CheckSpace/#CheckSpace/g' $CHROOT/etc/pacman.conf
         msg "Mounting necessary filesystems..."
-        mount -R /home $CHROOT/home
-        mount -t proc /proc $CHROOT/proc
-        mount -R /tmp $CHROOT/tmp
-        mount -R /sys $CHROOT/sys
-        mount -R /dev $CHROOT/dev
-        [[ $MOUNT_RUN = "yes" ]] && mount -R /run $CHROOT/run
-        mount --make-rslave $CHROOT/dev
-        mount --make-rslave $CHROOT/sys
-        mkdir -p $CHROOT/var/lib/dbus
-        mount -R /var/lib/dbus $CHROOT/var/lib/dbus
-        mkdir -p $CHROOT/lib/modules
-        mount -R /lib/modules $CHROOT/lib/modules
-        mount -R /boot $CHROOT/boot
+        /usr/local/share/archbox/bin/archboxinit start
         cp /usr/local/share/archbox/chroot_setup.bash $CHROOT/chroot_setup
         echo $USER > /tmp/archbox_user
         chroot $CHROOT /bin/bash -c "/chroot_setup"
