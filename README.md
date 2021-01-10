@@ -116,10 +116,10 @@ unix:path=/run/user/1000/bus
 ```
 Or alternatively if you use WM-only, just disable mounting ```/run``` entirely and manually set XDG_RUNTIME_DIR into ```/tmp``` like ```/tmp/$(whoami)```.
 
-##### Archbox doesn't access resources in /usr/share
+##### Archbox didn't access resources in /usr/share
 In Archbox, Symlink ```/usr``` to ```/run/current-system/sw```:
 ```
-sudo mkdir -o /run/current-system/
+sudo mkdir -p /run/current-system/
 sudo ln -s /usr /run/current-system/sw
 ```
 make sure /run isn't mounted.
