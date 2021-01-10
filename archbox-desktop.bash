@@ -14,7 +14,7 @@ install_desktop(){
 }
 
 checkdep(){
-    which $1 >/dev/null 2>&1 || err "Install $1!"
+    hash $1 2>/dev/null || err "Install $1!"
 }
 
 err(){
