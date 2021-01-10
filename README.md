@@ -102,6 +102,7 @@ ENV_VAR="QT_QPA_PLATFORMTHEME=qt5ct GTK_CSD=0 LD_PRELOAD=/var/home/lemniskett/gi
 ```
 ### Known issues
 #### NixOS-specific issues
+##### /run mounting
 Mounting ```/run``` somehow breaks NixOS, set ```MOUNT_RUN``` in ```/etc/archbox.conf``` to anything other than ```yes``` to disable mounting ```/run```, then do :
 ```
 archbox --mount-runtime-only
@@ -114,6 +115,15 @@ $ echo $DBUS_SESSION_BUS_ADDRESS
 unix:path=/run/user/1000/bus
 ```
 Or alternatively if you use WM-only, just disable mounting ```/run``` entirely and manually set XDG_RUNTIME_DIR into ```/tmp``` like ```/tmp/$(whoami)```.
+
+##### Archbox doesn't access resources in /usr/share
+In Archbox, Symlink ```/usr``` to ```/run/current-system/sw```:
+```
+sudo mkdir -o /run/current-system/
+sudo ln -s /usr /run/current-system/sw
+```
+make sure /run isn't mounted.
+
 #### PulseAudio refused to connect
 This can be caused by different dbus machine-id between chroot and host, copying ```/etc/machine-id``` from host to chroot should do the job.
 #### Musl-based distros
