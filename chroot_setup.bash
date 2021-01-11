@@ -15,13 +15,10 @@ pacman-key --init
 pacman-key --populate archlinux
 msg "Installing essential packages..."
 pacman -Syu base base-devel xorg pulseaudio nano --noconfirm
-msg "Installing servicectl..."
-mkdir -p /usr/local/share/servicectl/enabled
-curl -L 'https://raw.githubusercontent.com/lemniskett/servicectl/master/servicectl' > /usr/local/share/servicectl/servicectl 2>/dev/null
-curl -L 'https://raw.githubusercontent.com/lemniskett/servicectl/master/serviced' > /usr/local/share/servicectl/serviced 2>/dev/null
-chmod +x /usr/local/share/servicectl/service{d,ctl}
-ln -s /usr/local/share/servicectl/servicectl /usr/local/bin/servicectl
-ln -s /usr/local/share/servicectl/serviced /usr/local/bin/serviced
+msg "Installing archboxctl..."
+mkdir -p /usr/local/bin
+curl https://raw.githubusercontent.com/lemniskett/archboxctl/master/archboxctl.bash > /usr/local/bin/archboxctl
+chmod 755 /usr/local/bin/archboxctl
 msg "Setting up locale..."
 echo "Uncomment needed locale, enter to continue"
 read
