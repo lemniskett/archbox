@@ -13,7 +13,7 @@ rbind() {
 }
 
 bindproc() {
-    [[ $(mount | grep $CHROOT/proc) ]] && msg "$CHROOT already mounted." \
+    [[ $(mount | grep $CHROOT/proc) ]] && msg "$CHROOT/proc already mounted." \
         || (mount -t proc /proc $CHROOT/proc && msg "$CHROOT/proc mounted!")
 }
 
