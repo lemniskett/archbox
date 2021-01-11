@@ -34,7 +34,9 @@ case $1 in
         [[ $MOUNT_RUN = "yes" ]] && rbind /run
         [[ $MOUNT_MOD = "yes" ]] && rbind /lib/modules && rbind /boot
         [[ -d /var/lib/dbus ]] && rbind /var/lib/dbus
-        chroot $CHROOT /usr/local/bin/serviced >/dev/null 2>&1
+        for i in ${SERVICES[@]}; do
+            chroot $CHROOT /bin/su -c "/usr/local/bin/archboxctl exec $i" > /dev/null 2>&1
+        done
         exit 0
     ;;
     stop)
