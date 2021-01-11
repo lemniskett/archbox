@@ -66,16 +66,16 @@ permit nopass :wheel as root cmd /usr/local/share/archbox/bin/remount_run
 ```
 ### Misc
 #### Systemd services
-Use ```servicectl``` command to manage systemd services.
-More info [here](https://github.com/smaknsk/servicectl) 
+Use ```archboxctl``` command to manage systemd services.
+More info [here](https://github.com/lemniskett/archboxctl) 
 
-To enable service on host boot, in archbox do :
+To enable service on host boot, edit `/etc/archbox.conf` :
 ```
-sudo servicectl enable <service name>
+SERVICES=(vmware-networks-configuration vmware-networks vmware-usbarbitrator nginx)
 ```
-To start services immediately, in archbox do :
+To start services immediately, in Archbox, do :
 ```
-sudo servicectl start <service name>
+sudo archboxctl exec <Service name>
 ```
 This isn't actually using systemd to start services, rather it parses systemd .service files and executes it.
 #### Desktop entries
