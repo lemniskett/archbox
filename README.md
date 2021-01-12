@@ -67,17 +67,29 @@ permit nopass :wheel as root cmd /usr/local/share/archbox/bin/remount_run
 ### Misc
 #### Systemd services
 Use ```archboxctl``` command to manage systemd services.
-More info [here](https://github.com/lemniskett/archboxctl) 
+More info [here](https://github.com/lemniskett/archboxctl).
 
+This isn't actually using systemd to start services, rather it parses systemd .service files and executes it.
+
+##### Autostart services
 To enable service on host boot, edit `/etc/archbox.conf` :
 ```
 SERVICES=(vmware-networks-configuration vmware-networks vmware-usbarbitrator nginx)
 ```
+Keep in mind that this doesn't resolve service dependencies, so you may need to enable the dependencies manually. you can use ```archboxctl desc <service>``` to read the .service file
+
+##### Post-exec delay
+Services are asynchronously started, if some services have some issues when starting together you may want to add post-exec delay.
+```
+SERVICES=( php-fpm:3 nginx )
+```
+
+This will add 3 seconds delay after executing php-fpm.
+##### Start services immediately
 To start services immediately, in Archbox, do :
 ```
 sudo archboxctl exec <Service name>
 ```
-This isn't actually using systemd to start services, rather it parses systemd .service files and executes it.
 #### Desktop entries
 Use ```archbox-desktop``` to install desktop entries in chroot to host (installed to ```~/.local/share/applications/archbox```)
 #### Lauching apps via rofi
@@ -100,6 +112,13 @@ An example with multiple enviroment variables.
 ```
 ENV_VAR="QT_QPA_PLATFORMTHEME=qt5ct GTK_CSD=0 LD_PRELOAD=/var/home/lemniskett/git_repo/gtk3-nocsd/libgtk3-nocsd.so.0"
 ```
+
+#### Adding more shared directories
+Edit SHARED_FOLDER in ```/etc/archbox.conf```. For example: 
+```
+SHARED_FOLDER=( /home /var/www )
+```
+Note that this will recursively mount directories.
 ### Known issues
 #### NixOS-specific issues
 ##### /run mounting
