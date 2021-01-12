@@ -26,7 +26,6 @@ rmbind() {
 
 case $1 in
     start)
-        rbind /home
         bindproc
         rbind /tmp
         rbind /sys make-rslave
@@ -34,13 +33,16 @@ case $1 in
         [[ $MOUNT_RUN = "yes" ]] && rbind /run
         [[ $MOUNT_MOD = "yes" ]] && rbind /lib/modules && rbind /boot
         [[ -d /var/lib/dbus ]] && rbind /var/lib/dbus
-        for i in ${SERVICES[@]}; do
-            chroot $CHROOT /bin/su -c "/usr/local/bin/archboxctl exec $i" > /dev/null 2>&1
+        for i in ${SHARED_FOLDER[@]}; do
+            mkdir -p $CHROOT/$i
+            rbind $i
+        done
+        for j in ${SERVICES[@]}; do
+            chroot $CHROOT /bin/su -c "/usr/local/bin/archboxctl exec $j" > /dev/null 2>&1
         done
         exit 0
     ;;
     stop)
-        rmbind /home
         rmbind /proc
         rmbind /tmp
         rmbind /sys
@@ -48,7 +50,9 @@ case $1 in
         [[ $MOUNT_RUN = "yes" ]] && rmbind /run
         [[ $MOUNT_MOD = "yes" ]] && rmbind /lib/modules && rmbind /boot
         rmbind /var/lib/dbus
-        kill $(pidof serviced) 2>/dev/null
+        for i in ${SHARED_FOLDER[@]}; do
+            rmbind $i
+        done
         exit 0
     ;;
 esac
