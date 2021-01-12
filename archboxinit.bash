@@ -37,8 +37,16 @@ case $1 in
             mkdir -p $CHROOT/$i
             rbind $i
         done
+        msg "Starting services"
         for j in ${SERVICES[@]}; do
-            chroot $CHROOT /bin/su -c "/usr/local/bin/archboxctl exec $j" > /dev/null 2>&1
+            if [[ $j = *:* ]]; then
+                delay=$(echo $j | sed 's/.*://')
+                service=$(echo $j | sed 's/:.*//')
+                chroot $CHROOT /bin/su -c "/usr/local/bin/archboxctl exec $service" > /dev/null 2>&1 &
+                sleep $delay
+            else
+                chroot $CHROOT /bin/su -c "/usr/local/bin/archboxctl exec $j" > /dev/null 2>&1 &
+            fi
         done
         exit 0
     ;;
