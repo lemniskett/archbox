@@ -90,6 +90,10 @@ To start services immediately, in Archbox, do :
 ```
 sudo archboxctl exec <Service name>
 ```
+
+##### Custom command on boot
+You can create a shell script located at ```/etc/archbox.rc``` and ```archboxinit``` will execute it in Archbox on boot.
+
 #### Desktop entries
 Use ```archbox-desktop``` to install desktop entries in chroot to host (installed to ```~/.local/share/applications/archbox```)
 #### Lauching apps via rofi

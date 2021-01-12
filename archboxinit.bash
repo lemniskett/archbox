@@ -48,6 +48,12 @@ case $1 in
                 chroot $CHROOT /bin/su -c "/usr/local/bin/archboxctl exec $j" > /dev/null 2>&1 &
             fi
         done
+        if [[ -e /etc/archbox.rc ]]; then
+            cp /etc/archbox.rc /tmp/archbox.rc
+            chmod +x /tmp/archbox.rc
+            chroot $CHROOT /bin/su -c '/tmp/archbox.rc' > /tmp/archbox.rc.log 2>&1
+            rm /tmp/archbox.rc
+        fi
         exit 0
     ;;
     stop)
