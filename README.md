@@ -9,6 +9,7 @@ Ever since I'm running some niche distros like Void, Solus, I had a problem find
 - Wget
 - Tar
 - Desktop-file-utils
+- Xorg-xhost
 - Zenity (Optional: for .desktop entry manager GUI)
 ### Installing Archbox
 It's pretty easy, just run ```install.sh``` as root.
