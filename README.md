@@ -74,7 +74,7 @@ This isn't actually using systemd to start services, rather it parses systemd .s
 ##### Autostart services
 To enable service on host boot, edit `/etc/archbox.conf` :
 ```
-SERVICES=(vmware-networks-configuration vmware-networks vmware-usbarbitrator nginx)
+SERVICES=( vmware-networks-configuration vmware-networks vmware-usbarbitrator nginx )
 ```
 Keep in mind that this doesn't resolve service dependencies, so you may need to enable the dependencies manually. you can use ```archboxctl desc <service>``` to read the .service file
 
