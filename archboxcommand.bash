@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
 source /etc/archbox.conf
+source /tmp/archbox_env
 
-REQ_ENV="DBUS_SESSION_BUS_ADDRESS=$(cat /tmp/archbox_dbus_session_address) XDG_RUNTIME_DIR=$(cat /tmp/archbox_xdg_runtime_dir)"
+REQ_ENV="DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS "
+REQ_ENV+="XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR "
+[[ ! -z $DISPLAY ]] && REQ_ENV+="DISPLAY=$DISPLAY "
+[[ ! -z $WAYLAND_DISPLAY ]] && REQ_ENV+="WAYLAND_DISPLAY=$WAYLAND_DISPLAY "
 
 ENV="$REQ_ENV $ENV_VAR"
 COMMAND="$@"

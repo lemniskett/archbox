@@ -14,9 +14,18 @@ asroot(){
     [[ $EUID -ne 0 ]] && err "Run this as root!"
 }
 
-storeenv(){
-    echo $DBUS_SESSION_BUS_ADDRESS > /tmp/archbox_dbus_session_address
-    echo $XDG_RUNTIME_DIR > /tmp/archbox_xdg_runtime_dir
+#storeenv(){
+#    echo $DBUS_SESSION_BUS_ADDRESS > /tmp/archbox_dbus_session_address
+#    echo $XDG_RUNTIME_DIR > /tmp/archbox_xdg_runtime_dir
+#}
+
+storeenv() {
+    echo "# This will be sourced when entering Archbox" > /tmp/archbox_env
+    [[ ! -z $WAYLAND_DISPLAY ]] && echo "WAYLAND_DISPLAY=$WAYLAND_DISPLAY" >> /tmp/archbox_env
+    [[ ! -z $DISPLAY ]] && checkdep xhost && xhost +local: > /dev/null \
+        && echo "DISPLAY=$DISPLAY" >> /tmp/archbox_env
+    echo "DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS" >> /tmp/archbox_env
+    echo "XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR" >> /tmp/archbox_env
 }
 
 help_text(){
