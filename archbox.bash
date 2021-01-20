@@ -17,8 +17,10 @@ asroot(){
 storeenv() {
     echo "# This will be sourced when entering Archbox" > /tmp/archbox_env
     [[ ! -z $WAYLAND_DISPLAY ]] && echo "WAYLAND_DISPLAY=$WAYLAND_DISPLAY" >> /tmp/archbox_env
-    [[ ! -z $DISPLAY ]] && checkdep xhost && xhost +local: > /dev/null \
-        && echo "DISPLAY=$DISPLAY" >> /tmp/archbox_env
+    if [[ ! -z $DISPLAY ]]; then
+        hash xhost >/dev/null 2>&1 && xhost +local: > /dev/null 
+        echo "DISPLAY=$DISPLAY" >> /tmp/archbox_env
+    fi
     echo "DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS" >> /tmp/archbox_env
     echo "XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR" >> /tmp/archbox_env
 }
