@@ -38,7 +38,15 @@ Thanks to [@SamsiFPV](https://github.com/SamsiFPV)
 
 If you don't use systemd, either create your own init service, or create a @reboot cronjob.
 ### Removing chroot enviroment
-**IMPORTANT**, Make sure you've unmounted everything in chroot enviroment, if you're unsure which partitions must be unmounted, remove the init script and reboot, then delete the folder.
+**IMPORTANT**, Make sure you've unmounted everything in chroot enviroment, it's better to remove the init script and reboot to unmount everything. if you can't reboot for some reason, do :
+```
+/usr/local/share/archbox/bin/archboxinit stop
+```
+, then do :
+```
+mount
+```
+make sure there's no mounted Archbox directories and then delete the Arch Linux directory.
 ### Entering chroot enviroment
 To enter chroot, do :
 ```
