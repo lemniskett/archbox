@@ -98,12 +98,10 @@ case $1 in
         exit $?
     ;;
     -m|--mount)
-        asroot
-        $PREFIX/share/archbox/bin/archboxinit start
+        $PRIV $PREFIX/share/archbox/bin/archboxinit start
     ;;
     -u|--umount)
-        asroot
-        $PREFIX/share/archbox/bin/archboxinit stop
+        $PRIV $PREFIX/share/archbox/bin/archboxinit stop
     ;;
     --remount-run)
         $PRIV $PREFIX/share/archbox/bin/remount_run

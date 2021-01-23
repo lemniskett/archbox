@@ -22,14 +22,14 @@ sudo archbox --create <archlinux tarball download link>
 ```
 ### Configuring filesystem automount
 Execute ```/usr/local/share/archbox/bin/archboxinit start``` on boot.
-If you use systemd, you can create a systemd service with this syntax below :
+If you use systemd, you can create a systemd service with this syntax below (Assuming the install prefix is ```/usr/local```) :
 ```
 [Unit]
 Description=Archbox init
 PartOf=multi-user.target
 
 [Service]
-ExecStart=<install prefix>/bin/archbox --mount
+ExecStart=/usr/local/bin/archbox --mount
 Type=oneshot
 User=root
 
@@ -42,9 +42,9 @@ If you don't use systemd, either create your own init service, or create a @rebo
 ### Removing chroot enviroment
 **IMPORTANT**, Make sure you've unmounted everything in chroot enviroment, it's better to remove the init script and reboot to unmount everything. if you can't reboot for some reason, do :
 ```
-/usr/local/share/archbox/bin/archboxinit stop
+archbox -u
 ```
-, then do :
+then do :
 ```
 mount
 ```
@@ -55,7 +55,7 @@ To enter chroot, do :
 archbox --enter
 ```
 ### Executing commands in chroot enviroment
-To execute commands inside chroot envirotment, do :
+To execute commands inside chroot enviroment, do :
 ```
 archbox <command>
 ```
@@ -64,16 +64,17 @@ for example, to update chroot, do :
 archbox sudo pacman -Syu
 ```
 ### Optional steps
-You may want to add this if you don't want to run archbox chroot without password :
+You may want to add this if you don't want to use Archbox without password (assuming the install prefix is ```/usr/local```) :
 #### Sudo
 ```
-%wheel  ALL=(root) NOPASSWD: /usr/local/share/archbox/bin/archbox,/usr/local/share/archbox/bin/copyresolv,/usr/local/share/archbox/bin/remount_run
+%wheel  ALL=(root) NOPASSWD: /usr/local/share/archbox/bin/archbox,/usr/local/share/archbox/bin/copyresolv,/usr/local/share/archbox/bin/remount_run,/usr/local/share/archbox/bin/archboxinit
 ```
 #### Doas
 ```
 permit nopass :wheel as root cmd /usr/local/share/archbox/bin/archbox
 permit nopass :wheel as root cmd /usr/local/share/archbox/bin/copyresolv
 permit nopass :wheel as root cmd /usr/local/share/archbox/bin/remount_run
+permit nopass :wheel as root cmd /usr/local/share/archbox/bin/archboxinit
 ```
 ### Misc
 #### Systemd services
