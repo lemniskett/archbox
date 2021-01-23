@@ -6,7 +6,9 @@ Ever since I'm running some niche distros like Void, Solus, I had a problem find
 ### Dependencies
 - Bash
 - Sed
-- Wget
+- Curl
+- Wget (Optional: use ```wget``` when it's installed)
+- Aria2 (Optional: use ```aria2c``` when it's installed)
 - Tar
 - Desktop-file-utils
 - Xorg-xhost (Optional: allowing users in Archbox to access X server)

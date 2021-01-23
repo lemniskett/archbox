@@ -39,6 +39,18 @@ OPTIONS:
 EOF
 }
 
+fetch_tarball(){
+    if hash aria2c 2>/dev/null; then
+        aria2c -o archlinux.tar.gz $1
+    elif hash wget 2>/dev/null; then
+        wget -O archlinux.tar.gz $1
+    elif hash curl 2>/dev/null; then
+        curl -o archlinux.tar.gz $1
+    else
+        err "No supported downloader found."
+    fi
+}
+
 err(){
     echo "$(tput bold)$(tput setaf 1)==> $@ $(tput sgr0)" 1>&2
     exit 1
@@ -57,7 +69,7 @@ case $1 in
         cd $INSTALL_PATH
         msg "Downloading Arch Linux tarball..."
         checkdep wget
-        while true; do wget -O archlinux.tar.gz $2 && break; done
+        while true; do fetch_tarball $2 && break; done
         msg "Extracting the tarball..."
         checkdep tar
         tar xzf archlinux.tar.gz
