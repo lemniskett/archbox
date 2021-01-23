@@ -33,6 +33,8 @@ OPTIONS:
   -c, --create URL      Creates a chroot enviroment.
   -e, --enter           Enters chroot enviroment.
   -h, --help            Displays this help message.
+  -m, --mount           Mount Archbox directories.
+  -u, --umount          Unmount Archbox directories.
   --remount-run         Remount /run in chroot enviroment.
   --mount-runtime-only  Mount XDG_RUNTIME_DIR to chroot enviroment.
 
@@ -94,6 +96,14 @@ case $1 in
         copyresolv
         $PRIV $PREFIX/share/archbox/bin/archbox enter
         exit $?
+    ;;
+    -m|--mount)
+        asroot
+        $PREFIX/share/archbox/bin/archboxinit start
+    ;;
+    -u|--umount)
+        asroot
+        $PREFIX/share/archbox/bin/archboxinit stop
     ;;
     --remount-run)
         $PRIV $PREFIX/share/archbox/bin/remount_run

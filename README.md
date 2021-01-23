@@ -29,7 +29,7 @@ Description=Archbox init
 PartOf=multi-user.target
 
 [Service]
-ExecStart=/usr/local/share/archbox/bin/archboxinit start
+ExecStart=<install prefix>/bin/archbox --mount
 Type=oneshot
 User=root
 
