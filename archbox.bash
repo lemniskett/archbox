@@ -7,7 +7,7 @@ checkdep(){
 }
 
 copyresolv(){
-    $PRIV /usr/local/share/archbox/bin/copyresolv
+    $PRIV $PREFIX/share/archbox/bin/copyresolv
 }
 
 asroot(){
@@ -33,6 +33,8 @@ OPTIONS:
   -c, --create URL      Creates a chroot enviroment.
   -e, --enter           Enters chroot enviroment.
   -h, --help            Displays this help message.
+  -m, --mount           Mount Archbox directories.
+  -u, --umount          Unmount Archbox directories.
   --remount-run         Remount /run in chroot enviroment.
   --mount-runtime-only  Mount XDG_RUNTIME_DIR to chroot enviroment.
 
@@ -83,8 +85,8 @@ case $1 in
         checkdep sed
         sed -i 's/CheckSpace/#CheckSpace/g' $CHROOT/etc/pacman.conf
         msg "Mounting necessary filesystems..."
-        /usr/local/share/archbox/bin/archboxinit start
-        cp /usr/local/share/archbox/chroot_setup.bash $CHROOT/chroot_setup
+        $PREFIX/share/archbox/bin/archboxinit start
+        cp $PREFIX/share/archbox/chroot_setup.bash $CHROOT/chroot_setup
         echo $USER > /tmp/archbox_user
         chroot $CHROOT /bin/bash -c "/chroot_setup"
         exit $?
@@ -92,15 +94,21 @@ case $1 in
     -e|--enter)
         storeenv
         copyresolv
-        $PRIV /usr/local/share/archbox/bin/archbox enter
+        $PRIV $PREFIX/share/archbox/bin/archbox enter
         exit $?
     ;;
+    -m|--mount)
+        $PRIV $PREFIX/share/archbox/bin/archboxinit start
+    ;;
+    -u|--umount)
+        $PRIV $PREFIX/share/archbox/bin/archboxinit stop
+    ;;
     --remount-run)
-        $PRIV /usr/local/share/archbox/bin/remount_run
+        $PRIV $PREFIX/share/archbox/bin/remount_run
         exit $?
     ;;
     --mount-runtime-only)
-        $PRIV /usr/local/share/archbox/bin/remount_run runtimeonly
+        $PRIV $PREFIX/share/archbox/bin/remount_run runtimeonly
         exit $?
     ;;
     -h|--help)
@@ -117,7 +125,7 @@ case $1 in
     *)
         storeenv
         copyresolv
-        $PRIV /usr/local/share/archbox/bin/archbox $@
+        $PRIV $PREFIX/share/archbox/bin/archbox $@
         exit $?
     ;;
 esac

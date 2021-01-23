@@ -3,4 +3,4 @@
 source /etc/archbox.conf
 
 startx
-$PRIV /usr/local/share/archbox/bin/remount_run killxdg
+$PRIV $PREFIX/share/archbox/bin/remount_run killxdg
