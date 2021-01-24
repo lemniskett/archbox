@@ -21,7 +21,7 @@ Before creating chroot enviroment, edit your chroot username in ```/etc/archbox.
 sudo archbox --create <archlinux tarball download link>
 ```
 ### Configuring filesystem automount
-Execute ```/usr/local/share/archbox/bin/archboxinit start``` on boot.
+Execute ```archbox --mount``` on boot.
 If you use systemd, you can create a systemd service with this syntax below (Assuming the install prefix is ```/usr/local```) :
 ```
 [Unit]
