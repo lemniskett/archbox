@@ -149,7 +149,7 @@ $ echo $XDG_RUNTIME_DIR
 $ echo $DBUS_SESSION_BUS_ADDRESS
 unix:path=/run/user/1000/bus
 ```
-Or alternatively if you use WM-only, just disable mounting ```/run``` entirely and manually set XDG_RUNTIME_DIR into ```/tmp``` like ```/tmp/$(whoami)```.
+Or alternatively if you use WM-only, just disable mounting ```/run``` entirely and manually set XDG_RUNTIME_DIR into ```/tmp``` like ```/tmp/$(whoami)```, this is not recommended if you use systemd, stuffs like Pipewire, Desktop portal, etc may broke.
 
 ##### Archbox didn't access resources in /usr/share
 In Archbox, Symlink ```/usr``` to ```/run/current-system/sw```:
