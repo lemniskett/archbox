@@ -1,7 +1,7 @@
 # Archbox
-Installs Arch Linux inside a chroot enviroment.
+Installs Arch Linux inside a chroot environment.
 ## Why?
-Ever since I'm running some niche distros like Void, Solus, I had a problem finding softwares I need in their not-so-large repositories, also I don't like how flatpak and snap works. so i decided to create an Arch Linux chroot enviroment everytime I distrohop. Why Arch Linux? They have a really, really good repositories, oh and don't mention how big AUR is.
+Ever since I'm running some niche distros like Void, Solus, I had a problem finding softwares I need in their not-so-large repositories, also I don't like how flatpak and snap works. so i decided to create an Arch Linux chroot environment everytime I distrohop. Why Arch Linux? They have a really, really good repositories, oh and don't mention how big AUR is.
 ## Installation
 ### Dependencies
 - Bash
@@ -15,8 +15,8 @@ Ever since I'm running some niche distros like Void, Solus, I had a problem find
 - Zenity (Optional: for .desktop entry manager GUI)
 ### Installing Archbox
 It's pretty easy, just run ```install.sh``` as root.
-### Installing chroot enviroment
-Before creating chroot enviroment, edit your chroot username in ```/etc/archbox.conf```, then do :
+### Installing chroot environment
+Before creating chroot environment, edit your chroot username in ```/etc/archbox.conf```, then do :
 ```
 sudo archbox --create <archlinux tarball download link>
 ```
@@ -39,8 +39,8 @@ WantedBy=multi-user.target
 Thanks to [@SamsiFPV](https://github.com/SamsiFPV)
 
 If you don't use systemd, either create your own init service, or create a @reboot cronjob.
-### Removing chroot enviroment
-**IMPORTANT**, Make sure you've unmounted everything in chroot enviroment, it's better to remove the init script and reboot to unmount everything. if you can't reboot for some reason, do :
+### Removing chroot environment
+**IMPORTANT**, Make sure you've unmounted everything in chroot environment, it's better to remove the init script and reboot to unmount everything. if you can't reboot for some reason, do :
 ```
 archbox -u
 ```
@@ -49,13 +49,13 @@ then do :
 mount
 ```
 make sure there's no mounted Archbox directories and then delete the Arch Linux directory.
-### Entering chroot enviroment
+### Entering chroot environment
 To enter chroot, do :
 ```
 archbox --enter
 ```
-### Executing commands in chroot enviroment
-To execute commands inside chroot enviroment, do :
+### Executing commands in chroot environment
+To execute commands inside chroot environment, do :
 ```
 archbox <command>
 ```
@@ -119,12 +119,12 @@ If you use bash with nerd font you could add a nice little Arch Linux icon in yo
 [[ -e /etc/arch-release ]] && export PS1=" $PS1"
 ```
 to your ```~/.bashrc```
-#### Adding enviroment variables
+#### Adding environment variables
 Edit ENV_VAR in ```/etc/archbox.conf```. For example, if you want to use qt5ct as Qt5 theme, edit it like this :
 ```
 ENV_VAR="QT_QPA_PLATFORMTHEME=qt5ct"
 ```
-An example with multiple enviroment variables.
+An example with multiple environment variables.
 ```
 ENV_VAR="QT_QPA_PLATFORMTHEME=qt5ct GTK_CSD=0 LD_PRELOAD=/var/home/lemniskett/git_repo/gtk3-nocsd/libgtk3-nocsd.so.0"
 ```
@@ -162,7 +162,7 @@ make sure /run isn't mounted.
 #### PulseAudio refused to connect
 This can be caused by different dbus machine-id between chroot and host, copying ```/etc/machine-id``` from host to chroot should do the job.
 #### Musl-based distros
-Although /run is mounted in chroot enviroment on boot, XDG_RUNTIME_DIR is not visible in chroot enviroment, remounting /run will make it visible. do :
+Although /run is mounted in chroot environment on boot, XDG_RUNTIME_DIR is not visible in chroot environment, remounting /run will make it visible. do :
 ```
 archbox --remount-run
 ```
