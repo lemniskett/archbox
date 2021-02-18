@@ -12,7 +12,7 @@ install -v -D -m 755 ./remount_run.bash $PREFIX/share/archbox/bin/remount_run
 install -v -D -m 755 ./chroot_setup.bash $PREFIX/share/archbox/chroot_setup.bash
 install -v -D -m 755 ./archboxinit.bash $PREFIX/share/archbox/bin/archboxinit
 
-cat << EOF >> /etc/archbox.conf
+grep 'PREFIX' /etc/archbox.conf >/dev/null 2>&1 || cat << EOF >> /etc/archbox.conf
 
 # Don't change this unless you know what you're doing.
 PREFIX="$PREFIX"
