@@ -48,7 +48,10 @@ then do :
 ```
 mount
 ```
-make sure there's no mounted Archbox directories and then delete the Arch Linux directory.
+make sure there's no mounted Archbox directories and then delete the Arch Linux directory (Assuming the INSTALL_PATH is /var/archlinux) :
+```
+rm -rf /var/archlinux
+```
 ### Entering chroot environment
 To enter chroot, do :
 ```
