@@ -64,7 +64,7 @@ for example, to update chroot, do :
 archbox sudo pacman -Syu
 ```
 ### Optional steps
-You may want to add this if you don't want to use Archbox without password (assuming the install prefix is ```/usr/local``` and you're in group ```wheel```) :
+You may want to add these rules if you don't want to use Archbox without password (assuming the install prefix is ```/usr/local``` and you're in group ```wheel```) :
 #### Sudo
 ```
 %wheel  ALL=(root) NOPASSWD: /usr/local/share/archbox/bin/archbox,/usr/local/share/archbox/bin/copyresolv,/usr/local/share/archbox/bin/remount_run,/usr/local/share/archbox/bin/archboxinit
@@ -107,12 +107,13 @@ sudo archboxctl exec <Service name>
 You can create a shell script located at ```/etc/archbox.rc``` and ```archboxinit``` will execute it in Archbox on boot.
 
 #### Desktop entries
-Use ```archbox-desktop``` to install desktop entries in chroot to host (installed to ```~/.local/share/applications/archbox```)
+Use ```archbox-desktop``` to install desktop entries in chroot to host (installed to ```~/.local/share/applications/archbox```), you'll need to add ```sudo``` (or ```doas```) rules to launch archbox without a password.
 #### Lauching apps via rofi
 Instead of opening terminal or installing desktop entries everytime you want to run application inside chroot, you may want to launch rofi inside chroot, install rofi and do :
 ```
 archbox rofi -show drun
 ```
+Just like desktop entries, you'll need to add ```sudo``` (or ```doas```) rules to launch archbox without a password.
 #### Prompt
 If you use bash with nerd font you could add a nice little Arch Linux icon in your prompt, add :
 ```
