@@ -67,7 +67,7 @@ for example, to update chroot, do :
 archbox sudo pacman -Syu
 ```
 ### Optional steps
-You may want to add these rules if you don't want to use Archbox without password (assuming the install prefix is ```/usr/local``` and you're in group ```wheel```) :
+You may want to add these rules if you want to use Archbox without password (assuming the install prefix is ```/usr/local``` and you're in group ```wheel```) :
 #### Sudo
 ```
 %wheel  ALL=(root) NOPASSWD: /usr/local/share/archbox/bin/archbox,/usr/local/share/archbox/bin/copyresolv,/usr/local/share/archbox/bin/remount_run,/usr/local/share/archbox/bin/archboxinit
