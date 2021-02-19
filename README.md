@@ -44,11 +44,11 @@ If you don't use systemd, either create your own init service, or create a @rebo
 ```
 archbox -u
 ```
-then do :
+then do (Assuming the INSTALL_PATH is /var/archlinux) :
 ```
-mount
+mount | grep /var/archlinux
 ```
-make sure there's no mounted Archbox directories and then delete the Arch Linux directory (Assuming the INSTALL_PATH is /var/archlinux) :
+make sure there's no mounted Archbox directories and then delete the Arch Linux directory :
 ```
 rm -rf /var/archlinux
 ```
