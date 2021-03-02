@@ -31,7 +31,10 @@ case $1 in
         rbind /sys make-rslave
         rbind /dev make-rslave
         [[ $MOUNT_RUN = "yes" ]] && rbind /run
-	[[ $MOUNT_MOD = "yes" ]] && rbind $(readlink -f /lib/modules) && rbind /boot
+        if [[ $MOUNT_MOD = "yes" ]]; then
+            rbind $(readlink -f /lib/modules)
+            rbind /boot
+        fi
         [[ -d /var/lib/dbus ]] && rbind /var/lib/dbus
         for i in ${SHARED_FOLDER[@]}; do
             mkdir -p $CHROOT/$i
@@ -62,7 +65,10 @@ case $1 in
         rmbind /sys
         rmbind /dev
         [[ $MOUNT_RUN = "yes" ]] && rmbind /run
-	[[ $MOUNT_MOD = "yes" ]] && rmbind $(readlink -f /lib/modules) && rmbind /boot
+        if [[ $MOUNT_MOD = "yes" ]]; then
+            rmbind $(readlink -f /lib/modules)
+            rmbind /boot
+        fi
         rmbind /var/lib/dbus
         for i in ${SHARED_FOLDER[@]}; do
             rmbind $i
