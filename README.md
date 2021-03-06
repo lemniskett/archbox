@@ -141,7 +141,10 @@ Edit SHARED_FOLDER in ```/etc/archbox.conf```. For example:
 ```
 SHARED_FOLDER=( /home /var/www )
 ```
-Note that this will recursively mount directories.
+To mount to different directory, use ```:``` separator :
+```
+SHARED_FOLDER=( /home /var/www:/host_webroot )
+```
 ### Known issues
 #### NixOS-specific issues
 ##### /run mounting
@@ -161,7 +164,7 @@ Or alternatively if you use WM-only, just disable mounting ```/run``` entirely a
 ##### Archbox didn't access resources in /usr/share
 In Archbox, Symlink ```/usr``` to ```/run/current-system/sw```:
 ```
-sudo mkdir -p /run/current-system/
+sudo mkdir -p /run/current-system
 sudo ln -s /usr /run/current-system/sw
 ```
 make sure /run isn't mounted.

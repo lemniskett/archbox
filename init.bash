@@ -12,6 +12,11 @@ rbind() {
     [[ $2 = "make-rslave" ]] && mount --make-rslave $CHROOT$1
 }
 
+rbind_diff() {
+    [[ $(mount | grep $CHROOT$2) ]] && msg "$CHROOT$2 already mounted." \
+        || (mount -R $1 $CHROOT$2 && msg "$CHROOT$2 mounted!")
+}
+
 bindproc() {
     [[ $(mount | grep $CHROOT/proc) ]] && msg "$CHROOT/proc already mounted." \
         || (mount -t proc /proc $CHROOT/proc && msg "$CHROOT/proc mounted!")
@@ -37,8 +42,14 @@ case $1 in
         fi
         [[ -d /var/lib/dbus ]] && rbind /var/lib/dbus
         for i in ${SHARED_FOLDER[@]}; do
-            mkdir -p $CHROOT/$i
-            rbind $i
+            if [[ $i = *:* ]]; then
+                source=$(echo $i | sed 's/:.*//')
+                target=$(echo $i | sed 's/.*://')
+                mkdir -p $CHROOT$target
+                rbind_diff $source $target;
+            else
+                rbind $i;
+            fi
         done
         msg "Starting services"
         for j in ${SERVICES[@]}; do
@@ -71,7 +82,12 @@ case $1 in
         fi
         rmbind /var/lib/dbus
         for i in ${SHARED_FOLDER[@]}; do
-            rmbind $i
+            if [[ $i = *:* ]]; then
+                target=$(echo $i | sed 's/.*://')
+                rmbind $target;
+            else
+                rmbind $i;
+            fi
         done
         exit 0
     ;;
