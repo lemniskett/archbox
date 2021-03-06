@@ -82,7 +82,7 @@ case $1 in
         checkdep sed
         sed -i 's/CheckSpace/#CheckSpace/g' $CHROOT/etc/pacman.conf
         msg "Mounting necessary filesystems..."
-        $PREFIX/share/archbox/bin/archboxinit start
+        $PREFIX/share/archbox/bin/init start
         cp $PREFIX/share/archbox/chroot_setup.bash $CHROOT/chroot_setup
         echo $USER > /tmp/archbox_user
         chroot $CHROOT /bin/bash -c "/chroot_setup"
@@ -91,16 +91,16 @@ case $1 in
     -e|--enter)
         storeenv
         $PRIV $PREFIX/share/archbox/bin/uth copyresolv
-        $PRIV $PREFIX/share/archbox/bin/archbox enter
+        $PRIV $PREFIX/share/archbox/bin/enter
         exit $?
     ;;
     -m|--mount)
         storeenv
-        $PRIV $PREFIX/share/archbox/bin/archboxinit start
+        $PRIV $PREFIX/share/archbox/bin/init start
     ;;
     -u|--umount)
         storeenv
-        $PRIV $PREFIX/share/archbox/bin/archboxinit stop
+        $PRIV $PREFIX/share/archbox/bin/init stop
     ;;
     --remount-run)
         storeenv
@@ -126,7 +126,7 @@ case $1 in
     *)
         storeenv
         $PRIV $PREFIX/share/archbox/bin/uth copyresolv
-        $PRIV $PREFIX/share/archbox/bin/archbox $@
+        $PRIV $PREFIX/share/archbox/bin/exec $@
         exit $?
     ;;
 esac
