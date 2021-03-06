@@ -8,7 +8,7 @@ install -v -D -m 755 ./archbox-desktop.bash $PREFIX/bin/archbox-desktop
 [[ ! -e /etc/archbox.conf ]] && install -v -D -m 755 ./archbox.conf /etc/archbox.conf
 install -v -D -m 755 ./archboxcommand.bash $PREFIX/share/archbox/bin/archbox
 install -v -D -m 755 ./chroot_setup.bash $PREFIX/share/archbox/chroot_setup.bash
-install -v -D -m 755 ./archboxinit.bash $PREFIX/share/archbox/bin/archboxinit
+install -v -D -m 755 ./init.bash $PREFIX/share/archbox/bin/init
 install -v -D -m 755 ./uth.bash $PREFIX/share/archbox/bin/uth
 
 grep 'PREFIX=' /etc/archbox.conf >/dev/null 2>&1 || cat << EOF >> /etc/archbox.conf
