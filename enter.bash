@@ -10,4 +10,4 @@ REQ_ENV+="XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR "
 
 ENV="$REQ_ENV $ENV_VAR"
 COMMAND="$@"
-chroot $CHROOT /sbin/env $ENV /bin/su $USER
+chroot $CHROOT /sbin/env $ENV /bin/su $ARCHBOX_USER

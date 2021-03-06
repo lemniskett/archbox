@@ -24,4 +24,8 @@ case $1 in
         mount --rbind /run $CHROOT/run
         exit $?
         ;;
+    chownvar)
+        chown $2:$2 /tmp/archbox_env
+        chmod 700 /tmp/archbox_env
+        ;;
 esac

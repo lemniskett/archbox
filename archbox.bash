@@ -12,7 +12,7 @@ asroot(){
 
 storeenv() {
     echo "# This will be sourced when entering Archbox" > /tmp/archbox_env
-    chmod 777 /tmp/archbox_env >/dev/null 2>&1
+    $PRIV $PREFIX/share/archbox/bin/uth chownvar $USER
     [[ ! -z $WAYLAND_DISPLAY ]] && echo "WAYLAND_DISPLAY=$WAYLAND_DISPLAY" >> /tmp/archbox_env
     if [[ ! -z $DISPLAY ]]; then
         hash xhost >/dev/null 2>&1 && xhost +local: > /dev/null 
@@ -84,7 +84,7 @@ case $1 in
         msg "Mounting necessary filesystems..."
         $PREFIX/share/archbox/bin/init start
         cp $PREFIX/share/archbox/chroot_setup.bash $CHROOT/chroot_setup
-        echo $USER > /tmp/archbox_user
+        echo $ARCHBOX_USER > /tmp/archbox_user
         chroot $CHROOT /bin/bash -c "/chroot_setup"
         exit $?
     ;;
