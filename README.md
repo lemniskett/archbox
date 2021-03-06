@@ -73,11 +73,7 @@ archbox sudo pacman -Syu
 You may want to add these rules if you want to use Archbox without password (assuming the install prefix is ```/usr/local``` and you're in group ```wheel```) :
 #### Sudo
 ```
-%wheel  ALL=(root) NOPASSWD: 
-/usr/local/share/archbox/bin/enter,
-/usr/local/share/archbox/bin/exec,
-/usr/local/share/archbox/bin/uth,
-/usr/local/share/archbox/bin/init
+%wheel  ALL=(root) NOPASSWD: /usr/local/shre/archbox/bin/enter,/usr/local/share/archbox/bin/exec,/usr/local/share/archbox/bin/uth,/usr/local/share/archbox/bin/init
 ```
 #### Doas
 ```
