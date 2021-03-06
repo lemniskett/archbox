@@ -95,20 +95,16 @@ case $1 in
         exit $?
     ;;
     -m|--mount)
-        storeenv
         $PRIV $PREFIX/share/archbox/bin/init start
     ;;
     -u|--umount)
-        storeenv
         $PRIV $PREFIX/share/archbox/bin/init stop
     ;;
     --remount-run)
-        storeenv
         $PRIV $PREFIX/share/archbox/bin/uth remountrun
         exit $?
     ;;
     --mount-runtime-only)
-        storeenv
         $PRIV $PREFIX/share/archbox/bin/uth runtimeonly
         exit $?
     ;;

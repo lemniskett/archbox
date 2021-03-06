@@ -29,7 +29,7 @@ Description=Archbox init
 PartOf=multi-user.target
 
 [Service]
-ExecStart=/usr/local/bin/archbox --mount
+ExecStart=/usr/local/share/archbox/bin/init start
 Type=oneshot
 User=root
 
@@ -38,7 +38,10 @@ WantedBy=multi-user.target
 ```
 Thanks to [@SamsiFPV](https://github.com/SamsiFPV)
 
-If you don't use systemd, either create your own init service, or create a @reboot cronjob.
+If you don't use systemd, either create your own init service, or create a @reboot cronjob :
+```
+@reboot /usr/local/share/archbox/bin/init start
+```
 ### Removing chroot environment
 **IMPORTANT**, Make sure you've unmounted everything in chroot environment, it's better to remove the init script and reboot to unmount everything. if you can't reboot for some reason, do :
 ```
@@ -70,14 +73,18 @@ archbox sudo pacman -Syu
 You may want to add these rules if you want to use Archbox without password (assuming the install prefix is ```/usr/local``` and you're in group ```wheel```) :
 #### Sudo
 ```
-%wheel  ALL=(root) NOPASSWD: /usr/local/share/archbox/bin/archbox,/usr/local/share/archbox/bin/copyresolv,/usr/local/share/archbox/bin/remount_run,/usr/local/share/archbox/bin/archboxinit
+%wheel  ALL=(root) NOPASSWD: 
+/usr/local/share/archbox/bin/enter,
+/usr/local/share/archbox/bin/exec,
+/usr/local/share/archbox/bin/uth,
+/usr/local/share/archbox/bin/init
 ```
 #### Doas
 ```
-permit nopass :wheel as root cmd /usr/local/share/archbox/bin/archbox
-permit nopass :wheel as root cmd /usr/local/share/archbox/bin/copyresolv
-permit nopass :wheel as root cmd /usr/local/share/archbox/bin/remount_run
-permit nopass :wheel as root cmd /usr/local/share/archbox/bin/archboxinit
+permit nopass :wheel as root cmd /usr/local/share/archbox/bin/enter
+permit nopass :wheel as root cmd /usr/local/share/archbox/bin/exec
+permit nopass :wheel as root cmd /usr/local/share/archbox/bin/uth
+permit nopass :wheel as root cmd /usr/local/share/archbox/bin/init
 ```
 ### Misc
 #### Systemd services
