@@ -104,12 +104,12 @@ case $1 in
     ;;
     --remount-run)
         storeenv
-        $PRIV $PREFIX/share/archbox/bin/remount_run
+        $PRIV $PREFIX/share/archbox/bin/uth remountrun
         exit $?
     ;;
     --mount-runtime-only)
         storeenv
-        $PRIV $PREFIX/share/archbox/bin/remount_run runtimeonly
+        $PRIV $PREFIX/share/archbox/bin/uth runtimeonly
         exit $?
     ;;
     -h|--help)
