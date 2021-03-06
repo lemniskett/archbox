@@ -6,17 +6,13 @@ checkdep(){
     hash $1 2>/dev/null || err "Install $1!"
 }
 
-copyresolv(){
-    $PRIV $PREFIX/share/archbox/bin/copyresolv
-}
-
 asroot(){
     [[ $EUID -ne 0 ]] && err "Run this as root!"
 }
 
 storeenv() {
     echo "# This will be sourced when entering Archbox" > /tmp/archbox_env
-    chmod 777 /tmp/archbox_env >/dev/null 2>&1
+    $PRIV $PREFIX/share/archbox/bin/uth chownvar $USER
     [[ ! -z $WAYLAND_DISPLAY ]] && echo "WAYLAND_DISPLAY=$WAYLAND_DISPLAY" >> /tmp/archbox_env
     if [[ ! -z $DISPLAY ]]; then
         hash xhost >/dev/null 2>&1 && xhost +local: > /dev/null 
@@ -86,34 +82,30 @@ case $1 in
         checkdep sed
         sed -i 's/CheckSpace/#CheckSpace/g' $CHROOT/etc/pacman.conf
         msg "Mounting necessary filesystems..."
-        $PREFIX/share/archbox/bin/archboxinit start
+        $PREFIX/share/archbox/bin/init start
         cp $PREFIX/share/archbox/chroot_setup.bash $CHROOT/chroot_setup
-        echo $USER > /tmp/archbox_user
+        echo $ARCHBOX_USER > /tmp/archbox_user
         chroot $CHROOT /bin/bash -c "/chroot_setup"
         exit $?
     ;;
     -e|--enter)
         storeenv
-        copyresolv
-        $PRIV $PREFIX/share/archbox/bin/archbox enter
+        $PRIV $PREFIX/share/archbox/bin/uth copyresolv
+        $PRIV $PREFIX/share/archbox/bin/enter
         exit $?
     ;;
     -m|--mount)
-        storeenv
-        $PRIV $PREFIX/share/archbox/bin/archboxinit start
+        $PRIV $PREFIX/share/archbox/bin/init start
     ;;
     -u|--umount)
-        storeenv
-        $PRIV $PREFIX/share/archbox/bin/archboxinit stop
+        $PRIV $PREFIX/share/archbox/bin/init stop
     ;;
     --remount-run)
-        storeenv
-        $PRIV $PREFIX/share/archbox/bin/remount_run
+        $PRIV $PREFIX/share/archbox/bin/uth remountrun
         exit $?
     ;;
     --mount-runtime-only)
-        storeenv
-        $PRIV $PREFIX/share/archbox/bin/remount_run runtimeonly
+        $PRIV $PREFIX/share/archbox/bin/uth runtimeonly
         exit $?
     ;;
     -h|--help)
@@ -129,8 +121,8 @@ case $1 in
     ;;
     *)
         storeenv
-        copyresolv
-        $PRIV $PREFIX/share/archbox/bin/archbox $@
+        $PRIV $PREFIX/share/archbox/bin/uth copyresolv
+        $PRIV $PREFIX/share/archbox/bin/exec $@
         exit $?
     ;;
 esac

@@ -10,5 +10,4 @@ REQ_ENV+="XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR "
 
 ENV="$REQ_ENV $ENV_VAR"
 COMMAND="$@"
-[[ $1 = "enter" ]] && (chroot $CHROOT /sbin/env $ENV /bin/su $USER; exit 0) \
-    || chroot $CHROOT /bin/su -c "env $ENV $COMMAND" $USER
+chroot $CHROOT /sbin/env $ENV /bin/su $ARCHBOX_USER
