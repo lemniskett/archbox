@@ -165,18 +165,20 @@ make sure /run isn't mounted.
 
 #### PulseAudio refused to connect
 This can be caused by different dbus machine-id between chroot and host, copying ```/etc/machine-id``` from host to chroot should do the job.
-#### Musl-based distros
-Although /run is mounted in chroot environment on boot, XDG_RUNTIME_DIR is not visible in chroot environment, remounting /run will make it visible. do :
+#### XDG_RUNTIME_DIR is not visible in Archbox
+Although /run is mounted in chroot environment on boot, XDG_RUNTIME_DIR sometimes is not visible in chroot environment, remounting /run will make it visible. do :
 ```
 archbox --remount-run
 ```
-after user login, Also if you use Void Musl, you need to kill every process that runs in XDG_RUNTIME_DIR when you log out, You need to reinstall archbox with ```--exp``` flag and use ```startx-killxdg``` instead of ```startx```, or run :
+after user login, And sometimes you need to kill every process that runs in XDG_RUNTIME_DIR when you log out, You need to reinstall archbox with ```--exp``` flag and use ```startx-killxdg``` instead of ```startx```, or run :
 ```
 /usr/local/share/archbox/bin/remount_run killxdg
 ```
-on logout. you can put it in ```/etc/gdm/PostSession/Default``` if you use GDM
-
-Tested in Void Linux musl and Alpine Linux.
+on logout. you can put it in ```/etc/gdm/PostSession/Default``` if you use GDM, or just disable mounting ```/run``` entirely, set ```MOUNT_RUN``` in ```/etc/archbox.conf``` to anything other than ```yes``` to disable mounting ```/run``` and do :
+```
+archbox --remount-run
+```
+after user login.
 
 #### Polkit
 ```pkexec``` is kind of tricky to make it work in chroot, if you use rofi to launch GUI applications in chroot, you may not able to launch any ```.desktop``` files with ```Exec=pkexec...``` in it. If you really want them to work, you can do :
