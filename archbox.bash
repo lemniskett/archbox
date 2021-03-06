@@ -6,10 +6,6 @@ checkdep(){
     hash $1 2>/dev/null || err "Install $1!"
 }
 
-copyresolv(){
-    $PRIV $PREFIX/share/archbox/bin/copyresolv
-}
-
 asroot(){
     [[ $EUID -ne 0 ]] && err "Run this as root!"
 }
@@ -94,7 +90,7 @@ case $1 in
     ;;
     -e|--enter)
         storeenv
-        copyresolv
+        $PRIV $PREFIX/share/archbox/bin/uth copyresolv
         $PRIV $PREFIX/share/archbox/bin/archbox enter
         exit $?
     ;;
@@ -129,7 +125,7 @@ case $1 in
     ;;
     *)
         storeenv
-        copyresolv
+        $PRIV $PREFIX/share/archbox/bin/uth copyresolv
         $PRIV $PREFIX/share/archbox/bin/archbox $@
         exit $?
     ;;
