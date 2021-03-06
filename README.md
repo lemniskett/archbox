@@ -178,7 +178,7 @@ archbox --remount-run
 ```
 after user login, And sometimes you need to kill every process that runs in XDG_RUNTIME_DIR when you log out, You need to reinstall archbox with ```--exp``` flag and use ```startx-killxdg``` instead of ```startx```, or run :
 ```
-/usr/local/share/archbox/bin/remount_run killxdg
+/usr/local/share/archbox/bin/uth killxdg
 ```
 on logout. you can put it in ```/etc/gdm/PostSession/Default``` if you use GDM, or just disable mounting ```/run``` entirely, set ```MOUNT_RUN``` in ```/etc/archbox.conf``` to anything other than ```yes``` to disable mounting ```/run``` and do :
 ```
