@@ -16,6 +16,7 @@ asroot(){
 
 storeenv() {
     echo "# This will be sourced when entering Archbox" > /tmp/archbox_env
+    chmod 777 /tmp/archbox_env >/dev/null 2>&1
     [[ ! -z $WAYLAND_DISPLAY ]] && echo "WAYLAND_DISPLAY=$WAYLAND_DISPLAY" >> /tmp/archbox_env
     if [[ ! -z $DISPLAY ]]; then
         hash xhost >/dev/null 2>&1 && xhost +local: > /dev/null 
