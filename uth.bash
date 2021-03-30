@@ -26,6 +26,6 @@ case $1 in
         ;;
     chownvar)
         chown $2:$2 /tmp/archbox_env
-        chmod 700 /tmp/archbox_env
+        chmod 755 /tmp/archbox_env
         ;;
 esac
