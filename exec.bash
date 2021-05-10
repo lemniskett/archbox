@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-source /etc/archbox.conf
-source /tmp/archbox_env
+source /etc/archbox.conf &>/dev/null
+source /tmp/archbox_env &>/dev/null
 
 REQ_ENV="DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS "
 REQ_ENV+="XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR "

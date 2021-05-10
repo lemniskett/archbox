@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source /etc/archbox.conf
+source /etc/archbox.conf &>/dev/null
 
 install_desktop(){
     mkdir -p ~/.local/share/applications/archbox
