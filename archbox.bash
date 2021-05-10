@@ -67,7 +67,6 @@ case $1 in
         mkdir -p $INSTALL_PATH
         cd $INSTALL_PATH
         msg "Downloading Arch Linux tarball..."
-        checkdep wget
         while true; do fetch_tarball $2 && break; done
         msg "Extracting the tarball..."
         checkdep tar
