@@ -3,18 +3,10 @@ Installs Arch Linux inside a chroot environment.
 ## Why?
 Ever since I'm running some niche distros like Void, Solus, I had a problem finding softwares I need in their not-so-large repositories, also I don't like how flatpak and snap works. so i decided to create an Arch Linux chroot environment everytime I distrohop. Why Arch Linux? They have a really, really good repositories, oh and don't mention how big AUR is.
 ## Installation
-### Dependencies
-- Bash
-- Sed
-- Curl
-- Wget (Optional: use ```wget``` when it's installed)
-- Aria2 (Optional: use ```aria2c``` when it's installed)
-- Tar
-- Desktop-file-utils
-- Xorg-xhost (Optional: allowing users in Archbox to access X server)
-- Zenity (Optional: for .desktop entry manager GUI)
-### Installing Archbox
-It's pretty easy, just run ```install.sh``` as root.
+See [INSTALL.md](INSTALL.md)
+
+For ChromeOS users, [CROS_INSTALL.md](CROS_INSTALL.md)
+## Using Archbox
 ### Installing chroot environment
 Before creating chroot environment, edit your chroot username in ```/etc/archbox.conf```, then do :
 ```
