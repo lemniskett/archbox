@@ -32,8 +32,12 @@ gsettings set org.gnome.desktop.interface font-name "Roboto 10"
 For GTK2 apps, use `lxappearance` and for QT5 apps, use `qt5ct`
 
 ## Issues
+### DBus
 Things that depends on `dbus` may broke if you execute it directly, e.g. :
 ```
 archbox dconf-editor
 ```
 You'll need to enter the shell to use it.
+
+### Audio
+Audio doesn't seem to work at the moment, It's possible to start pulseaudio in chroot, but I didn't dive enough yet.
