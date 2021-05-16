@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
-ROOT="${ROOT:-/}"
-PREFIX="${PREFIX:-${ROOT}usr/local}"
+ROOT_DIR="${ROOT_DIR:-/}"
+PREFIX="${PREFIX:-${ROOT_DIR}usr/local}"
 
 mkdir -p $PREFIX/share/archbox/bin
 install -v -D -m 755 ./src/archbox.bash $PREFIX/bin/archbox
 install -v -D -m 755 ./src/archbox-desktop.bash $PREFIX/bin/archbox-desktop
-[[ ! -e /etc/archbox.conf ]] && install -v -D -m 755 ./src/archbox.conf ${ROOT}etc/archbox.conf
+[[ ! -e /etc/archbox.conf ]] && install -v -D -m 755 ./src/archbox.conf ${ROOT_DIR}etc/archbox.conf
 install -v -D -m 755 ./src/exec.bash $PREFIX/share/archbox/bin/exec
 install -v -D -m 755 ./src/enter.bash $PREFIX/share/archbox/bin/enter
 install -v -D -m 755 ./src/chroot_setup.bash $PREFIX/share/archbox/chroot_setup.bash
 install -v -D -m 755 ./src/init.bash $PREFIX/share/archbox/bin/init
 install -v -D -m 755 ./src/uth.bash $PREFIX/share/archbox/bin/uth
 
-grep 'PREFIX=' ${ROOT}etc/archbox.conf >/dev/null 2>&1 || cat << EOF >> ${ROOT}etc/archbox.conf
+grep 'PREFIX=' ${ROOT_DIR}etc/archbox.conf >/dev/null 2>&1 || cat << EOF >> ${ROOT_DIR}etc/archbox.conf
 
 # Don't change this unless you know what you're doing.
 PREFIX="$PREFIX"
