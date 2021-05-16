@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-source /etc/archbox.conf
-source /tmp/archbox_env
+source /etc/archbox.conf &>/dev/null
+source /tmp/archbox_env &>/dev/null
 
 case $1 in
     copyresolv)        
