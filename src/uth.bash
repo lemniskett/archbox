@@ -25,7 +25,7 @@ case $1 in
         exit $?
         ;;
     chownvar)
-        chown $2:$2 /tmp/archbox_env
+        chown $2 /tmp/archbox_env
         chmod 755 /tmp/archbox_env
         ;;
 esac
