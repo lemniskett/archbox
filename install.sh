@@ -1,5 +1,43 @@
 #!/usr/bin/env bash
 
+genconfig(){
+    cat << EOF
+ARCHBOX_USER="${ARCHBOX_USER:-root}"
+PRIV="${PRIV:-sudo}"
+INSTALL_PATH="${INSTALL_PATH:-/var/archlinux}"
+CHROOT="${CHROOT:-\$INSTALL_PATH/root.x86_64}"
+
+# Nix OS will breaks when you mount /run, change MOUNT_RUN to "no"
+# if you use Nix OS, don't forget to use \`archbox --mount-runtime-only\`
+# after user login.
+MOUNT_RUN="${MOUNT_RUN:-yes}"
+
+# Mount modules and boot directory, useful if you want to use kernels
+# from Arch Linux repo, otherwise it's best to remain disabled.
+MOUNT_MOD="${MOUNT_MOD:-no}"
+
+# Lazy unmounting, make sure you know what you're doing if enabling this!
+LAZY_UMOUNT="${LAZY_UMOUNT:-no}"
+
+# Put your desired enviroment variable here, for example:
+#
+# ENV_VAR="HOME=/var/home/lemniskett"
+#
+ENV_VAR="${ENV_VAR:-}"
+
+# Parse a Systemd service and executes it on boot, order matters, for example:
+#
+# SERVICES=( vmware-networks-configuration vmware-networks vmware-usbarbitrator php-fpm:3 nginx )
+#
+# Keep in mind that this doesn't resolve service dependencies, so you may need to
+# enable the dependencies manually.
+SERVICES=( ${SERVICES:-} )
+
+# Share other host directories into Archbox, absolute path needed.
+SHARED_FOLDER=( ${SHARED_FOLDERS:-/home} )
+EOF
+}
+
 ETC_DIR="${ETC_DIR:-/etc}"
 PREFIX="${PREFIX:-/usr/local}"
 
@@ -7,7 +45,7 @@ mkdir -p $PREFIX/share/archbox/bin
 mkdir -p $ETC_DIR
 install -v -D -m 755 ./src/archbox.bash $PREFIX/bin/archbox
 install -v -D -m 755 ./src/archbox-desktop.bash $PREFIX/bin/archbox-desktop
- [[ ! -e /etc/archbox.conf || ! -z $FORCE_INSTALL_CONFIG ]] && ./genconfig.sh > $ETC_DIR/archbox.conf
+ [[ ! -e /etc/archbox.conf || ! -z $FORCE_INSTALL_CONFIG ]] && genconfig > $ETC_DIR/archbox.conf
 install -v -D -m 755 ./src/exec.bash $PREFIX/share/archbox/bin/exec
 install -v -D -m 755 ./src/enter.bash $PREFIX/share/archbox/bin/enter
 install -v -D -m 755 ./src/chroot_setup.bash $PREFIX/share/archbox/chroot_setup.bash
