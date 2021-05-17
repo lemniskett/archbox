@@ -36,6 +36,12 @@ in
     };
 }
 ```
+Replace `your_user_here`, `rev_here`, and `rev_sha256_here`. to get rev and sha256 you can do :
+```sh
+nix-shell -p nix-prefetch-git
+nix-prefetch-git --url https://github.com/lemniskett/archbox.git
+```
+
 Configuration can be done by modifying `installPhase` e.g. :
 ```sh
 mkdir -p $out
