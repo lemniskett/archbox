@@ -6,6 +6,7 @@ Ever since I'm running some niche distros like Void, Solus, I had a problem find
 See [INSTALL.md](INSTALL.md)
 
 For NixOS users, [NIXOS_INSTALL.md](NIXOS_INSTALL.md)
+
 For ChromeOS users, [CROS_INSTALL.md](CROS_INSTALL.md)
 ## Using Archbox
 ### Installing chroot environment
