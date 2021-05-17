@@ -9,7 +9,7 @@ let
     archbox = pkgs.stdenv.mkDerivation rec {
         name = "archbox";
         src = pkgs.fetchFromGitHub {
-            owner = "your_user_here";
+            owner = "lemniskett";
             repo = "archbox";
             rev = "rev_here";
             sha256 = "rev_sha256_here";
