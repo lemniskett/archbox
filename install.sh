@@ -6,7 +6,7 @@ PREFIX="${PREFIX:-/usr/local}"
 mkdir -p $PREFIX/share/archbox/bin
 install -v -D -m 755 ./src/archbox.bash $PREFIX/bin/archbox
 install -v -D -m 755 ./src/archbox-desktop.bash $PREFIX/bin/archbox-desktop
-[[ ! -e $ETC_DIR/archbox.conf ]] && ./genconfig.sh > $ETC_DIR/archbox.conf
+ [[ ! -e /etc/archbox.conf || ! -z $FORCE_INSTALL_CONFIG ]] && ./genconfig.sh > $ETC_DIR/archbox.conf
 install -v -D -m 755 ./src/exec.bash $PREFIX/share/archbox/bin/exec
 install -v -D -m 755 ./src/enter.bash $PREFIX/share/archbox/bin/enter
 install -v -D -m 755 ./src/chroot_setup.bash $PREFIX/share/archbox/chroot_setup.bash
