@@ -4,6 +4,7 @@ ETC_DIR="${ETC_DIR:-/etc}"
 PREFIX="${PREFIX:-/usr/local}"
 
 mkdir -p $PREFIX/share/archbox/bin
+mkdir -p $ETC_DIR
 install -v -D -m 755 ./src/archbox.bash $PREFIX/bin/archbox
 install -v -D -m 755 ./src/archbox-desktop.bash $PREFIX/bin/archbox-desktop
  [[ ! -e /etc/archbox.conf || ! -z $FORCE_INSTALL_CONFIG ]] && ./genconfig.sh > $ETC_DIR/archbox.conf
