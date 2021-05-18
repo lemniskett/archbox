@@ -34,8 +34,7 @@ storeenv() {
         command -v xhost >/dev/null 2>&1 && xhost +local: > /dev/null 
         printf "%s\n" "DISPLAY=${DISPLAY}" >> /tmp/archbox_env
     fi
-    [ ! -z $DBUS_SESSION_BUS_ADDRESS ] && eval "$(dbus-launch)"
-    printf "%s\n" "DBUS_SESSION_BUS_ADDRESS=${DBUS_SESSION_BUS_ADDRESS}" >> /tmp/archbox_env
+    printf "%s\n" "DBUS_SESSION_BUS_ADDRESS=${DBUS_SESSION_BUS_ADDRESS:-disabled:}" >> /tmp/archbox_env
     printf "%s\n" "XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/tmp}" >> /tmp/archbox_env
 }
 
