@@ -27,7 +27,7 @@ asroot(){
 
 storeenv() {
     printf "%s\n" "# This will be sourced when entering Archbox" > /tmp/archbox_env
-    $PRIV ${PREFIX}/share/archbox/bin/uth chownvar $USER
+    "$PRIV" ${PREFIX}/share/archbox/bin/uth chownvar $USER
     [ ! -z $WAYLAND_DISPLAY ] && \
         printf "%s\n" "WAYLAND_DISPLAY=${WAYLAND_DISPLAY}" >> /tmp/archbox_env
     if [ ! -z $DISPLAY ]; then
@@ -82,7 +82,7 @@ case $1 in
         msg "Enabling internet connection in chroot enviroment..."
         cp /etc/resolv.conf "${CHROOT}"/etc/resolv.conf
         msg "You will need to edit which mirror you want to use, uncomment needed mirrors and save it."
-        echo "Editor of your choice:"
+        printf "%s" "Editor of your choice:"
         read MIRROR_EDITOR
         $MIRROR_EDITOR "${CHROOT}"/etc/pacman.d/mirrorlist || exit 1
         msg "Disabling Pacman's CheckSpace..."
@@ -91,28 +91,28 @@ case $1 in
         msg "Mounting necessary filesystems..."
         "${PREFIX}"/share/archbox/bin/init start
         cp "${PREFIX}"/share/archbox/chroot_setup.bash "${CHROOT}"/chroot_setup
-        echo $ARCHBOX_USER > /tmp/archbox_user
+        printf "%s" $ARCHBOX_USER > /tmp/archbox_user
         chroot $CHROOT /bin/bash -c "/chroot_setup"
         exit $?
     ;;
     -e|--enter)
         storeenv
-        $PRIV "${PREFIX}"/share/archbox/bin/uth copyresolv
-        $PRIV "${PREFIX}"/share/archbox/bin/enter
+        "$PRIV" "${PREFIX}"/share/archbox/bin/uth copyresolv
+        "$PRIV" "${PREFIX}"/share/archbox/bin/enter
         exit $?
     ;;
     -m|--mount)
-        $PRIV "${PREFIX}"/share/archbox/bin/init start
+        "$PRIV" "${PREFIX}"/share/archbox/bin/init start
     ;;
     -u|--umount)
-        $PRIV "${PREFIX}"/share/archbox/bin/init stop
+        "$PRIV" "${PREFIX}"/share/archbox/bin/init stop
     ;;
     --remount-run)
-        $PRIV "${PREFIX}"/share/archbox/bin/uth remountrun
+        "$PRIV" "${PREFIX}"/share/archbox/bin/uth remountrun
         exit $?
     ;;
     --mount-runtime-only)
-        $PRIV "${PREFIX}"/share/archbox/bin/uth runtimeonly
+        "$PRIV" "${PREFIX}"/share/archbox/bin/uth runtimeonly
         exit $?
     ;;
     -h|--help)
@@ -128,8 +128,8 @@ case $1 in
     ;;
     *)
         storeenv
-        $PRIV ${PREFIX}/share/archbox/bin/uth copyresolv
-        $PRIV ${PREFIX}/share/archbox/bin/exec $@
+        "$PRIV" "${PREFIX}"/share/archbox/bin/uth copyresolv
+        "$PRIV" "${PREFIX}"/share/archbox/bin/exec $@
         exit $?
     ;;
 esac
