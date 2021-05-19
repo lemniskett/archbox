@@ -1,29 +1,41 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-source /etc/archbox.conf &>/dev/null
+. /etc/archbox.conf >/dev/null 2>&1
+
+set --
+
+# Text colors/formatting
+red="\033[38;5;1"
+green="\033[38;5;2"
+bold="\033[1m"
+reset="\033[m"
+
+err(){
+    printf "${red}${bold}%s${reset}\n" "==> $*" 1>&2
+    exit 1
+}
+
+msg(){
+    printf "${green}${bold}%s${reset}\n" "==> $*" 1>&2
+}
 
 install_desktop(){
     mkdir -p ~/.local/share/applications/archbox
     for i in $@; do
         archbox readlink /usr/share/applications/$i >/dev/null 2>&1 \
-            && cp $CHROOT/$(archbox readlink /usr/share/applications/$i) ~/.local/share/applications/archbox \
-            || cp $CHROOT/usr/share/applications/$i ~/.local/share/applications/archbox 
+            && cp "${CHROOT}"/$(archbox readlink /usr/share/applications/$i) ~/.local/share/applications/archbox \
+            || cp "${CHROOT}"/usr/share/applications/$i "~/.local/share/applications/archbox"
         sed -i 's/Exec=/Exec=archbox\ /g' ~/.local/share/applications/archbox/$i
         sed -i '/TryExec=/d' ~/.local/share/applications/archbox/$i
     done
 }
 
 checkdep(){
-    hash $1 2>/dev/null || err "Install $1!"
-}
-
-err(){
-    echo "$(tput bold)$(tput setaf 1)==> $@ $(tput sgr0)" 1>&2
-    exit 1
+    command -v $1 2>/dev/null || err "Install $1!"
 }
 
 help_text(){
-cat << EOF
+    printf "%s" "
 USAGE: $0 <arguments>
 
 OPTIONS:
@@ -33,19 +45,25 @@ OPTIONS:
   -s, --list-installed  List installed desktop entries
   -h, --help            Displays this help message
 
-EOF
+"
+}
+
+list(){
+    for i in $*/*; do
+        printf "%s\n" "$i"
+    done
 }
 
 case $1 in 
     -i|--install)
         checkdep update-desktop-database
-        install_desktop ${@:2}
+        install_desktop ${@#$1}
         update-desktop-database
         exit $?
     ;;
     -r|--remove)
         checkdep update-desktop-database
-        selected_entry=${@:2}
+        selected_entry=${@#$1}
         for i in $selected_entry; do
             rm ~/.local/share/applications/archbox/$i
         done
@@ -57,12 +75,11 @@ case $1 in
         exit 0
     ;;
     -l|--list)
-        archbox ls -1 --color=none /usr/share/applications
-        exit $?
+        list "${CHROOT}"/usr/share/applications
     ;;
     -s|--list-installed)
-        ls -1 --color=none ~/.local/share/applications/archbox
-        exit $?
+        mkdir -p ~/.local/share/applications/archbox
+        list ~/.local/share/applications/archbox
     ;;
     *)
         checkdep zenity
@@ -74,23 +91,22 @@ case $1 in
              FALSE 'Install desktop entries' FALSE 'Remove desktop entries')"
         case $action in
             'Install desktop entries')
-                list_desktop="$(archbox ls --color=none -1 /usr/share/applications)"
-                zenity_entry="$(echo $list_desktop | sed 's/\ /\ FALSE\ /g')"
+                zenity_entry="$(list "${CHROOT}"/usr/share/applications | sed 's/\ /\ FALSE\ /g')"
                 selected_entry=$(zenity --list --checklist --height=500 --width=450 \
                     --title="Archbox Desktop Manager" \
                     --text "Select .desktop entries those you want to install" \
                     --column "Select" --column "Applications" \
                     FALSE $zenity_entry | sed 's/|/\ /g')
-                [[ -z $selected_entry ]] && exit 1
+                [ $selected_entry ] || exit 1
                 install_desktop $selected_entry
                 update-desktop-database
                 exit 0
             ;;
             'Remove desktop entries')
-                list_desktop="$(ls --color=none -1 ~/.local/share/applications/archbox)"
-                [[ -z $list_desktop ]] && zenity --info --title "Archbox Desktop Manager" \
+                list_desktop="$(list ~/.local/share/applications/archbox)"
+                [ $list_desktop = "*" ] && zenity --info --title "Archbox Desktop Manager" \
                     --text "No .desktop files installed" --width=300 && exit 1
-                zenity_entry="$(echo $list_desktop | sed 's/\ /\ FALSE\ /g')"
+                zenity_entry="$(printf "%s" "$list_desktop" | sed 's/\ /\ FALSE\ /g')"
                 selected_entry=$(zenity --list --checklist --height=500 --width=450 \
                 --title="Archbox Desktop Manager" \
                 --text "Select .desktop entries those you want to remove" \
