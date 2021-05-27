@@ -1,5 +1,3 @@
-#!/bin/sh
-
 . /etc/archbox.conf >/dev/null 2>&1
 
 set --
@@ -31,30 +29,30 @@ mkdir -p /usr/local/bin
 curl https://raw.githubusercontent.com/lemniskett/archboxctl/master/archboxctl.bash > /usr/local/bin/archboxctl
 chmod 755 /usr/local/bin/archboxctl
 msg "Setting up locale..."
-echo "Uncomment needed locale, enter to continue"
+printf "%s\n" "Uncomment needed locale, enter to continue"
 read
 nano /etc/locale.gen
 locale-gen
 msg "Setting up timezone..."
-echo "Enter your timezone, for example : \"Asia/Jakarta\"" 
+printf "%s\n" "Enter your timezone, for example : \"Asia/Jakarta\"" 
 while true; do
 	read TIMEZONE \
-		&& [[ -e /usr/share/zoneinfo/$TIMEZONE ]] \
+		&& [ -e /usr/share/zoneinfo/$TIMEZONE ] \
 		&& ln -s /usr/share/zoneinfo/$TIMEZONE /etc/localtime \
 		&& break \
-		|| echo "Timezone not found, enter it again."
+		|| printf "%s\n" "Timezone not found, enter it again."
 done
 msg "Creating user account..."
-CHROOT_USER="$(cat /tmp/archbox_user)"
+read CHROOT_USER < /tmp/archbox_user
 useradd -m $CHROOT_USER
-gpasswd -a $CHROOT_USER wheel
-echo "Enter root password"
+usermod -aG wheel $CHROOT_USER
+printf "%s\n" "Enter root password"
 while true; do
 	passwd && break
 done
-echo "Enter $CHROOT_USER password"
+printf "%s\n" "Enter $CHROOT_USER password"
 while true; do
 	passwd $CHROOT_USER && break
 done
 sed -i 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
-echo "Don't forget to run \"archbox --mount\" in host on boot"
+printf "%s\n" "Don't forget to run \"archbox --mount\" in host on boot"
