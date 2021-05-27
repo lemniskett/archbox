@@ -93,7 +93,7 @@ case $1 in
         "${PREFIX}"/share/archbox/bin/init start
         cp "${PREFIX}"/share/archbox/chroot_setup.bash "${CHROOT}"/chroot_setup
         printf "%s" $ARCHBOX_USER > /tmp/archbox_user
-        chroot $CHROOT /bin/bash -c "/chroot_setup"
+        chroot $CHROOT /bin/bash /chroot_setup
         exit $?
     ;;
     -e|--enter)

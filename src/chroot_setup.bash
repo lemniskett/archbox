@@ -1,15 +1,26 @@
-#!/usr/bin/env bash
+#!/bin/sh
+
+. /etc/archbox.conf >/dev/null 2>&1
+
+set --
+
+# Text colors/formatting
+red="\033[38;5;1"
+green="\033[38;5;2"
+bold="\033[1m"
+reset="\033[m"
 
 err(){
-    echo "$(tput bold)$(tput setaf 1)==> $@ $(tput sgr0)" 1>&2
+    printf "${red}${bold}%s${reset}\n" "==> $*" 1>&2
     exit 1
 }
 
 msg(){
-    echo "$(tput bold)$(tput setaf 2)==> $@ $(tput sgr0)"
+    printf "${green}${bold}%s${reset}\n" "==> $*" 1>&2
 }
 
 PATH=/usr/bin
+
 msg "Initializing pacman keyrings..."
 pacman-key --init
 pacman-key --populate archlinux

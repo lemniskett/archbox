@@ -44,7 +44,7 @@ PREFIX="${PREFIX:-/usr/local}"
 mkdir -p $PREFIX/share/archbox/bin
 mkdir -p $ETC_DIR
 install -v -D -m 755 ./src/archbox $PREFIX/bin/archbox
-install -v -D -m 755 ./src/archbox-desktop.bash $PREFIX/bin/archbox-desktop
+install -v -D -m 755 ./src/archbox-desktop $PREFIX/bin/archbox-desktop
  [[ ! -e /etc/archbox.conf || ! -z $FORCE_INSTALL_CONFIG ]] && genconfig > $ETC_DIR/archbox.conf
 install -v -D -m 755 ./src/exec.bash $PREFIX/share/archbox/bin/exec
 install -v -D -m 755 ./src/enter.bash $PREFIX/share/archbox/bin/enter
