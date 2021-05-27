@@ -50,7 +50,7 @@ install -v -D -m 755 ./src/exec $PREFIX/share/archbox/bin/exec
 install -v -D -m 755 ./src/enter $PREFIX/share/archbox/bin/enter
 install -v -D -m 755 ./src/chroot_setup $PREFIX/share/archbox/chroot_setup
 install -v -D -m 755 ./src/init $PREFIX/share/archbox/bin/init
-install -v -D -m 755 ./src/uth.bash $PREFIX/share/archbox/bin/uth
+install -v -D -m 755 ./src/uth $PREFIX/share/archbox/bin/uth
 
 grep 'PREFIX=' $ETC_DIR/archbox.conf >/dev/null 2>&1 || cat << EOF >> $ETC_DIR/archbox.conf
 
