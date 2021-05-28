@@ -25,6 +25,7 @@ rbind(){
     if checkmount $1; then
         msg "${CHROOT}${1} already mounted." 
     else 
+        mkdir -p "${CHROOT}${1}"
         mount -R $1 "${CHROOT}${1}"
         msg "${CHROOT}${1} mounted!"
     fi
@@ -37,6 +38,7 @@ rbind_diff() {
     if checkmount $2; then
         msg "${CHROOT}${2} already mounted."
     else
+        mkdir -p "${CHROOT}${1}"
         mount -R $1 "${CHROOT}${2}"
         msg "${CHROOT}${2} mounted!"
     fi
