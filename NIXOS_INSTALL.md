@@ -52,7 +52,7 @@ export PREFIX=$out
 export ARCHBOX_USER=lemni
 export MOUNT_RUN=no
 export ENV_VAR="TERM=foot"
-export SHARED_FOLDER=( /home /var/www )
+export SHARED_FOLDER="/home /var/www"
 ${pkgs.bash}/bin/bash install.sh
 ```
 ### Regular Installation
