@@ -1,0 +1,121 @@
+#!/bin/sh
+
+. /etc/archbox.conf
+
+# Text colors/formatting
+red="\033[38;5;1"
+green="\033[38;5;2"
+bold="\033[1m"
+reset="\033[m"
+
+err(){
+    printf "${red}${bold}%s${reset}\n" "==> $*" 1>&2
+    exit 1
+}
+
+msg(){
+    printf "${green}${bold}%s${reset}\n" "==> $*" 1>&2
+}
+
+rbind(){
+    if [ "$(mount | grep "${CHROOT}"${1} >/dev/null 2>&1)" ]; then
+        msg "${CHROOT}${1} already mounted." 
+    else 
+        mount -R $1 "${CHROOT}"${1}
+        msg "${CHROOT}${1} mounted!"
+    fi
+    if [ "$2" = "make-rslave" ]; then
+        mount --make-rslave ${CHROOT}${1}
+    fi
+}
+
+rbind_diff() {
+    if [ "$(mount | grep "${CHROOT}"${2})" ]; then
+        msg "$CHROOT$2 already mounted."
+    else
+        mount -R $1 "${CHROOT}"${2}
+        msg "${CHROOT}${2} mounted!"
+    fi
+}
+
+bindproc() {
+    if [ "$(mount | grep "${CHROOT}"/proc)" ]; then
+        msg "${CHROOT}/proc already mounted."
+    else
+        mount -t proc /proc "${CHROOT}"/proc
+        msg "${CHROOT}/proc mounted!"
+    fi
+}
+
+rmbind() {
+    umount_args=-R
+    [ "$LAZY_UMOUNT" = "yes" ] && umount_args=-Rl
+    if [ "$(mount | grep "${CHROOT}"${1})" ]; then
+        umount $umount_args "${CHROOT}"${1}
+        msg "${CHROOT}${1} unmounted!"
+    fi
+}
+
+case $1 in
+    start)
+        bindproc
+        rbind /tmp
+        rbind /sys make-rslave
+        rbind /dev make-rslave
+        [ "$MOUNT_RUN" = "yes" ] && rbind /run
+        if [ "$MOUNT_MOD" = "yes" ]; then
+            rbind "$(readlink -f /lib/modules)"
+            rbind /boot
+        fi
+        [ -d /var/lib/dbus ] && rbind /var/lib/dbus
+        for i in $SHARED_FOLDER; do
+            if [ $i = *:* ]; then
+                source=$(printf "%s" "$i" | sed 's/:.*//')
+                target=$(printf "%s" "$i" | sed 's/.*://')
+                mkdir -p "${CHROOT}"${target}
+                rbind_diff $source $target;
+            else
+                rbind $i;
+            fi
+        done
+        msg "Starting services"
+        for j in $SERVICES; do
+            if [ $j = *:* ]; then
+                delay=$(printf "%s" "$j" | sed 's/.*://')
+                service=$(printf "%s" "$j" | sed 's/:.*//')
+                chroot "$CHROOT" /bin/su -c "/usr/local/bin/archboxctl exec $service" > /dev/null 2>&1 &
+                sleep $delay
+            else
+                chroot "$CHROOT" /bin/su -c "/usr/local/bin/archboxctl exec $j" > /dev/null 2>&1 &
+            fi
+        done
+        if [ -e /etc/archbox.rc ]; then
+            cp /etc/archbox.rc /tmp/archbox.rc
+            chmod +x /tmp/archbox.rc
+            chroot "$CHROOT" /bin/su -c '/tmp/archbox.rc' > /tmp/archbox.rc.log 2>&1
+            rm /tmp/archbox.rc
+        fi
+        exit 0
+    ;;
+    stop)
+        rmbind /proc
+        rmbind /tmp
+        rmbind /sys
+        rmbind /dev
+        [ $MOUNT_RUN = "yes" ] && rmbind /run
+        if [ $MOUNT_MOD = "yes" ]; then
+            rmbind $(readlink -f /lib/modules)
+            rmbind /boot
+        fi
+        rmbind /var/lib/dbus
+        for i in $SHARED_FOLDER; do
+            if [ $i = *:* ]; then
+                target=$(printf "%s" "$i" | sed 's/.*://')
+                rmbind $target;
+            else
+                rmbind $i;
+            fi
+        done
+        exit 0
+    ;;
+esac

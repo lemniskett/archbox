@@ -27,14 +27,14 @@ ENV_VAR="${ENV_VAR:-}"
 
 # Parse a Systemd service and executes it on boot, order matters, for example:
 #
-# SERVICES=( vmware-networks-configuration vmware-networks vmware-usbarbitrator php-fpm:3 nginx )
+# SERVICES="vmware-networks-configuration vmware-networks vmware-usbarbitrator php-fpm:3 nginx"
 #
 # Keep in mind that this doesn't resolve service dependencies, so you may need to
 # enable the dependencies manually.
-SERVICES=( ${SERVICES:-} )
+SERVICES="${SERVICES:-}"
 
 # Share other host directories into Archbox, absolute path needed.
-SHARED_FOLDER=( ${SHARED_FOLDERS:-/home} )
+SHARED_FOLDER="${SHARED_FOLDERS:-/home}"
 EOF
 }
 
@@ -43,14 +43,14 @@ PREFIX="${PREFIX:-/usr/local}"
 
 mkdir -p $PREFIX/share/archbox/bin
 mkdir -p $ETC_DIR
-install -v -D -m 755 ./src/archbox.bash $PREFIX/bin/archbox
-install -v -D -m 755 ./src/archbox-desktop.bash $PREFIX/bin/archbox-desktop
+install -v -D -m 755 ./src/archbox $PREFIX/bin/archbox
+install -v -D -m 755 ./src/archbox-desktop $PREFIX/bin/archbox-desktop
  [[ ! -e /etc/archbox.conf || ! -z $FORCE_INSTALL_CONFIG ]] && genconfig > $ETC_DIR/archbox.conf
-install -v -D -m 755 ./src/exec.bash $PREFIX/share/archbox/bin/exec
-install -v -D -m 755 ./src/enter.bash $PREFIX/share/archbox/bin/enter
-install -v -D -m 755 ./src/chroot_setup.bash $PREFIX/share/archbox/chroot_setup.bash
-install -v -D -m 755 ./src/init.bash $PREFIX/share/archbox/bin/init
-install -v -D -m 755 ./src/uth.bash $PREFIX/share/archbox/bin/uth
+install -v -D -m 755 ./src/exec $PREFIX/share/archbox/bin/exec
+install -v -D -m 755 ./src/enter $PREFIX/share/archbox/bin/enter
+install -v -D -m 755 ./src/chroot_setup $PREFIX/share/archbox/chroot_setup
+install -v -D -m 755 ./src/init $PREFIX/share/archbox/bin/init
+install -v -D -m 755 ./src/uth $PREFIX/share/archbox/bin/uth
 
 grep 'PREFIX=' $ETC_DIR/archbox.conf >/dev/null 2>&1 || cat << EOF >> $ETC_DIR/archbox.conf
 

@@ -1,0 +1,135 @@
+#!/bin/sh
+
+. /etc/archbox.conf
+
+# Text colors/formatting
+red="\033[38;5;1"
+green="\033[38;5;2"
+bold="\033[1m"
+reset="\033[m"
+
+err(){
+    printf "${red}${bold}%s${reset}\n" "==> $*" 1>&2
+    exit 1
+}
+
+msg(){
+    printf "${green}${bold}%s${reset}\n" "==> $*"
+}
+
+checkdep(){
+    command -v $1 >/dev/null 2>&1 || err "Install $1!"
+}
+
+asroot(){
+    [ $(id -u) -eq 0 ] || err "Run this as root!"
+}
+
+storeenv() {
+    printf "%s\n" "# This will be sourced when entering Archbox" > /tmp/archbox_env
+    "$PRIV" ${PREFIX}/share/archbox/bin/uth chownvar $USER
+    [ $WAYLAND_DISPLAY ] && \
+        printf "%s\n" "WAYLAND_DISPLAY=${WAYLAND_DISPLAY}" >> /tmp/archbox_env
+    if [ $DISPLAY ]; then
+        command -v xhost >/dev/null 2>&1 && xhost +local: > /dev/null 
+        printf "%s\n" "DISPLAY=${DISPLAY}" >> /tmp/archbox_env
+    fi
+    printf "%s\n" "DBUS_SESSION_BUS_ADDRESS=${DBUS_SESSION_BUS_ADDRESS:-disabled:}" >> /tmp/archbox_env
+    printf "%s\n" "XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/tmp}" >> /tmp/archbox_env
+}
+
+help_text(){
+    printf "%s" "
+USAGE: $0 <arguments>
+
+OPTIONS:
+  -c, --create URL      Creates a chroot enviroment.
+  -e, --enter           Enters chroot enviroment.
+  -h, --help            Displays this help message.
+  -m, --mount           Mount Archbox directories.
+  -u, --umount          Unmount Archbox directories.
+  --remount-run         Remount /run in chroot enviroment.
+  --mount-runtime-only  Mount XDG_RUNTIME_DIR to chroot enviroment.
+
+"
+}
+
+fetch_tarball(){
+    if command -v aria2c 2>/dev/null; then
+        aria2c -o archlinux.tar.gz $1
+    elif command -v wget 2>/dev/null; then
+        wget -O archlinux.tar.gz $1
+    elif command -v curl 2>/dev/null; then
+        curl -o archlinux.tar.gz $1
+    else
+        err "No supported downloader found."
+    fi
+}
+
+case $1 in
+    -c|--create)
+        asroot
+        echo $2
+        [ ! $2 ] && err "Specify the link of Arch Linux bootstrap tarball!"
+        msg "Creating chroot directory..."
+        mkdir -p $INSTALL_PATH
+        cd $INSTALL_PATH
+        msg "Downloading Arch Linux tarball..."
+        while true; do fetch_tarball $2 && break; done
+        msg "Extracting the tarball..."
+        checkdep tar
+        tar xzf archlinux.tar.gz
+        msg "Enabling internet connection in chroot enviroment..."
+        cp /etc/resolv.conf "${CHROOT}"/etc/resolv.conf
+        msg "You will need to edit which mirror you want to use, uncomment needed mirrors and save it."
+        printf "%s " "Editor of your choice:"
+        read MIRROR_EDITOR
+        $MIRROR_EDITOR "${CHROOT}"/etc/pacman.d/mirrorlist || exit 1
+        msg "Disabling Pacman's CheckSpace..."
+        checkdep sed
+        sed -i "s/CheckSpace/#CheckSpace/g" "${CHROOT}"/etc/pacman.conf
+        msg "Mounting necessary filesystems..."
+        "${PREFIX}"/share/archbox/bin/init start
+        cp "${PREFIX}"/share/archbox/chroot_setup "${CHROOT}"/chroot_setup
+        printf "%s" $ARCHBOX_USER > /tmp/archbox_user
+        chroot $CHROOT /bin/sh /chroot_setup
+        exit $?
+    ;;
+    -e|--enter)
+        storeenv
+        "$PRIV" "${PREFIX}"/share/archbox/bin/uth copyresolv
+        "$PRIV" "${PREFIX}"/share/archbox/bin/enter
+        exit $?
+    ;;
+    -m|--mount)
+        "$PRIV" "${PREFIX}"/share/archbox/bin/init start
+    ;;
+    -u|--umount)
+        "$PRIV" "${PREFIX}"/share/archbox/bin/init stop
+    ;;
+    --remount-run)
+        "$PRIV" "${PREFIX}"/share/archbox/bin/uth remountrun
+        exit $?
+    ;;
+    --mount-runtime-only)
+        "$PRIV" "${PREFIX}"/share/archbox/bin/uth runtimeonly
+        exit $?
+    ;;
+    -h|--help)
+        help_text
+        exit 0
+    ;;
+    "")
+        help_text
+        exit 1
+    ;;
+    -*)
+        err "Unknown option: $1"
+    ;;
+    *)
+        storeenv
+        "$PRIV" "${PREFIX}"/share/archbox/bin/uth copyresolv
+        "$PRIV" "${PREFIX}"/share/archbox/bin/exec $@
+        exit $?
+    ;;
+esac

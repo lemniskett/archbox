@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 
-source /etc/archbox.conf
+. /etc/archbox.conf
 
 startx
 $PRIV $PREFIX/share/archbox/bin/uth killxdg

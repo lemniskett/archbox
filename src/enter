@@ -1,0 +1,10 @@
+#!/bin/sh
+
+. /etc/archbox.conf >/dev/null 2>&1
+. /tmp/archbox_env >/dev/null 2>&1
+
+REQ_ENV="DBUS_SESSION_BUS_ADDRESS=${DBUS_SESSION_BUS_ADDRESS} XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR} DISPLAY=${DISPLAY} WAYLAND_DISPLAY=${WAYLAND_DISPLAY}"
+
+ENV="$REQ_ENV $ENV_VAR"
+COMMAND="$@"
+chroot $CHROOT /usr/bin/env $ENV /bin/su $ARCHBOX_USER
