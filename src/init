@@ -18,19 +18,19 @@ msg(){
 }
 
 rbind(){
-    if mount | grep "${CHROOT}"${1} >/dev/null 2>&1; then
+    if [ "$(mount | grep "${CHROOT}"${1} >/dev/null 2>&1)" ]; then
         msg "${CHROOT}${1} already mounted." 
     else 
         mount -R $1 "${CHROOT}"${1}
         msg "${CHROOT}${1} mounted!"
     fi
-    if [ $2 = "make-rslave" ]; then
+    if [ "$2" = "make-rslave" ]; then
         mount --make-rslave ${CHROOT}${1}
     fi
 }
 
 rbind_diff() {
-    if mount | grep "${CHROOT}"${2}; then
+    if [ "$(mount | grep "${CHROOT}"${2})" ]; then
         msg "$CHROOT$2 already mounted."
     else
         mount -R $1 "${CHROOT}"${2}
@@ -39,18 +39,18 @@ rbind_diff() {
 }
 
 bindproc() {
-    if mount | grep "${CHROOT}"/proc; then
+    if [ "$(mount | grep "${CHROOT}"/proc)" ]; then
         msg "${CHROOT}/proc already mounted."
     else
         mount -t proc /proc "${CHROOT}"/proc
-        msg "${CHROOT}/proc mounted!")
+        msg "${CHROOT}/proc mounted!"
     fi
 }
 
 rmbind() {
     umount_args=-R
-    [ $LAZY_UMOUNT = "yes" ] && umount_args=-Rl
-    if mount | grep "${CHROOT}"${1}; then
+    [ "$LAZY_UMOUNT" = "yes" ] && umount_args=-Rl
+    if [ "$(mount | grep "${CHROOT}"${1})" ]; then
         umount $umount_args "${CHROOT}"${1}
         msg "${CHROOT}${1} unmounted!"
     fi
@@ -62,8 +62,8 @@ case $1 in
         rbind /tmp
         rbind /sys make-rslave
         rbind /dev make-rslave
-        [ $MOUNT_RUN = "yes" ] && rbind /run
-        if [ $MOUNT_MOD = "yes" ]; then
+        [ "$MOUNT_RUN" = "yes" ] && rbind /run
+        if [ "$MOUNT_MOD" = "yes" ]; then
             rbind "$(readlink -f /lib/modules)"
             rbind /boot
         fi

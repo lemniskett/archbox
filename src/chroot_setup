@@ -1,7 +1,3 @@
-. /etc/archbox.conf >/dev/null 2>&1
-
-set --
-
 # Text colors/formatting
 red="\033[38;5;1"
 green="\033[38;5;2"
@@ -23,13 +19,16 @@ msg "Initializing pacman keyrings..."
 pacman-key --init
 pacman-key --populate archlinux
 msg "Installing essential packages..."
-pacman -Syu base base-devel xorg pulseaudio nano --noconfirm
+pacman -Syu base base-devel nano --noconfirm
+printf "%s" "Do you want to use GUI apps? (y/n) "
+read INSTALL_GUI
+[ "$INSTALL_GUI" = "y" ] && pacman -Syu xorg pulseaudio --noconfirm
 msg "Installing archboxctl..."
 mkdir -p /usr/local/bin
 curl https://raw.githubusercontent.com/lemniskett/archboxctl/master/archboxctl.bash > /usr/local/bin/archboxctl
 chmod 755 /usr/local/bin/archboxctl
 msg "Setting up locale..."
-printf "%s\n" "Uncomment needed locale, enter to continue"
+printf "%s" "Uncomment needed locale, enter to continue"
 read
 nano /etc/locale.gen
 locale-gen
@@ -38,6 +37,7 @@ printf "%s\n" "Enter your timezone, for example : \"Asia/Jakarta\""
 while true; do
 	read TIMEZONE \
 		&& [ -e /usr/share/zoneinfo/$TIMEZONE ] \
+		&& rm -f /etc/localtime \
 		&& ln -s /usr/share/zoneinfo/$TIMEZONE /etc/localtime \
 		&& break \
 		|| printf "%s\n" "Timezone not found, enter it again."

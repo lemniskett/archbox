@@ -27,14 +27,14 @@ ENV_VAR="${ENV_VAR:-}"
 
 # Parse a Systemd service and executes it on boot, order matters, for example:
 #
-# SERVICES=( vmware-networks-configuration vmware-networks vmware-usbarbitrator php-fpm:3 nginx )
+# SERVICES="vmware-networks-configuration vmware-networks vmware-usbarbitrator php-fpm:3 nginx"
 #
 # Keep in mind that this doesn't resolve service dependencies, so you may need to
 # enable the dependencies manually.
-SERVICES=( ${SERVICES:-} )
+SERVICES="${SERVICES:-}"
 
 # Share other host directories into Archbox, absolute path needed.
-SHARED_FOLDER=( ${SHARED_FOLDERS:-/home} )
+SHARED_FOLDER="${SHARED_FOLDERS:-/home}"
 EOF
 }
 

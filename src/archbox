@@ -2,8 +2,6 @@
 
 . /etc/archbox.conf
 
-set --
-
 # Text colors/formatting
 red="\033[38;5;1"
 green="\033[38;5;2"
@@ -16,11 +14,11 @@ err(){
 }
 
 msg(){
-    printf "${green}${bold}%s${reset}\n" "==> $*" 1>&2
+    printf "${green}${bold}%s${reset}\n" "==> $*"
 }
 
 checkdep(){
-    command -v $1 2>/dev/null || err "Install $1!"
+    command -v $1 >/dev/null 2>&1 || err "Install $1!"
 }
 
 asroot(){
@@ -71,7 +69,8 @@ fetch_tarball(){
 case $1 in
     -c|--create)
         asroot
-        [ $2 ] && err "Specify the link of Arch Linux bootstrap tarball!"
+        echo $2
+        [ ! $2 ] && err "Specify the link of Arch Linux bootstrap tarball!"
         msg "Creating chroot directory..."
         mkdir -p $INSTALL_PATH
         cd $INSTALL_PATH
@@ -91,7 +90,7 @@ case $1 in
         sed -i "s/CheckSpace/#CheckSpace/g" "${CHROOT}"/etc/pacman.conf
         msg "Mounting necessary filesystems..."
         "${PREFIX}"/share/archbox/bin/init start
-        cp "${PREFIX}"/share/archbox/chroot_setup.bash "${CHROOT}"/chroot_setup
+        cp "${PREFIX}"/share/archbox/chroot_setup "${CHROOT}"/chroot_setup
         printf "%s" $ARCHBOX_USER > /tmp/archbox_user
         chroot $CHROOT /bin/sh /chroot_setup
         exit $?

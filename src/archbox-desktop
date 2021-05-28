@@ -2,8 +2,6 @@
 
 . /etc/archbox.conf >/dev/null 2>&1
 
-set --
-
 # Text colors/formatting
 red="\033[38;5;1"
 green="\033[38;5;2"
@@ -31,7 +29,7 @@ install_desktop(){
 }
 
 checkdep(){
-    command -v $1 2>/dev/null || err "Install $1!"
+    command -v $1 >/dev/null 2>&1 || err "Install $1!"
 }
 
 help_text(){

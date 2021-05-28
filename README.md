@@ -86,14 +86,14 @@ This isn't actually using systemd to start services, rather it parses systemd .s
 ##### Autostart services
 To enable service on host boot, edit `/etc/archbox.conf` :
 ```
-SERVICES=( vmware-networks-configuration vmware-networks vmware-usbarbitrator nginx )
+SERVICES="vmware-networks-configuration vmware-networks vmware-usbarbitrator nginx"
 ```
 Keep in mind that this doesn't resolve service dependencies, so you may need to enable the dependencies manually. you can use ```archboxctl desc <service>``` to read the .service file
 
 ##### Post-exec delay
 Services are asynchronously started, if some services have some issues when starting together you may want to add post-exec delay.
 ```
-SERVICES=( php-fpm:3 nginx )
+SERVICES="php-fpm:3 nginx"
 ```
 
 This will add 3 seconds delay after executing php-fpm.
@@ -162,6 +162,12 @@ sudo mkdir -p /run/current-system
 sudo ln -s /usr /run/current-system/sw
 ```
 make sure /run isn't mounted.
+
+##### Archbox didn't recognize commands
+Add ```PATH``` variable to ```/etc/archbox.conf```, for example:
+```
+ENV_VAR="PATH=/usr/bin:/usr/local/bin"
+```
 
 #### PulseAudio refused to connect
 This can be caused by different dbus machine-id between chroot and host, copying ```/etc/machine-id``` from host to chroot should do the job.
