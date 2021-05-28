@@ -34,7 +34,7 @@ ENV_VAR="${ENV_VAR:-}"
 SERVICES="${SERVICES:-}"
 
 # Share other host directories into Archbox, absolute path needed.
-SHARED_FOLDER="${SHARED_FOLDERS:-/home}"
+SHARED_FOLDER="${SHARED_FOLDER:-/home}"
 EOF
 }
 
