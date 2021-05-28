@@ -17,11 +17,15 @@ msg(){
     printf "${green}${bold}%s${reset}\n" "==> $*" 1>&2
 }
 
+checkmount(){
+    mount | grep "${CHROOT}${1}" >/dev/null 2>&1
+}
+
 rbind(){
-    if [ "$(mount | grep "${CHROOT}"${1} >/dev/null 2>&1)" ]; then
+    if checkmount $1; then
         msg "${CHROOT}${1} already mounted." 
     else 
-        mount -R $1 "${CHROOT}"${1}
+        mount -R $1 "${CHROOT}${1}"
         msg "${CHROOT}${1} mounted!"
     fi
     if [ "$2" = "make-rslave" ]; then
@@ -30,16 +34,16 @@ rbind(){
 }
 
 rbind_diff() {
-    if [ "$(mount | grep "${CHROOT}"${2})" ]; then
-        msg "$CHROOT$2 already mounted."
+    if checkmount $2; then
+        msg "${CHROOT}${2} already mounted."
     else
-        mount -R $1 "${CHROOT}"${2}
+        mount -R $1 "${CHROOT}${2}"
         msg "${CHROOT}${2} mounted!"
     fi
 }
 
 bindproc() {
-    if [ "$(mount | grep "${CHROOT}"/proc)" ]; then
+    if checkmount /proc; then
         msg "${CHROOT}/proc already mounted."
     else
         mount -t proc /proc "${CHROOT}"/proc
@@ -50,7 +54,7 @@ bindproc() {
 rmbind() {
     umount_args=-R
     [ "$LAZY_UMOUNT" = "yes" ] && umount_args=-Rl
-    if [ "$(mount | grep "${CHROOT}"${1})" ]; then
+    if checkmount $1; then
         umount $umount_args "${CHROOT}"${1}
         msg "${CHROOT}${1} unmounted!"
     fi
