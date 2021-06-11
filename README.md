@@ -99,7 +99,7 @@ SERVICES="php-fpm:3 nginx"
 This will add 3 seconds delay after executing php-fpm.
 ##### Start services immediately
 To start services immediately, in Archbox, do :
-```
+```8
 sudo archboxctl exec <Service name>
 ```
 
@@ -133,11 +133,11 @@ ENV_VAR="QT_QPA_PLATFORMTHEME=qt5ct GTK_CSD=0 LD_PRELOAD=/var/home/lemniskett/gi
 #### Adding more shared directories
 Edit SHARED_FOLDER in ```/etc/archbox.conf```. For example: 
 ```
-SHARED_FOLDER=( /home /var/www )
+SHARED_FOLDER="/home /var/www"
 ```
 To mount to different directory, use ```:``` separator :
 ```
-SHARED_FOLDER=( /home /var/www:/host_webroot )
+SHARED_FOLDER="/home /var/www:/host_webroot"
 ```
 ### Known issues
 #### NixOS-specific issues
