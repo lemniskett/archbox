@@ -27,7 +27,7 @@ asroot(){
 
 storeenv() {
     printf "%s\n" "# This will be sourced when entering Archbox" > /tmp/archbox_env
-    "$PRIV" ${PREFIX}/share/archbox/bin/uth chownvar $USER
+    $PRIV ${PREFIX}/share/archbox/bin/uth chownvar $USER
     [ $WAYLAND_DISPLAY ] && \
         printf "%s\n" "WAYLAND_DISPLAY=${WAYLAND_DISPLAY}" >> /tmp/archbox_env
     if [ $DISPLAY ]; then
@@ -97,22 +97,22 @@ case $1 in
     ;;
     -e|--enter)
         storeenv
-        "$PRIV" "${PREFIX}"/share/archbox/bin/uth copyresolv
-        "$PRIV" "${PREFIX}"/share/archbox/bin/enter
+        $PRIV "${PREFIX}"/share/archbox/bin/uth copyresolv
+        $PRIV "${PREFIX}"/share/archbox/bin/enter
         exit $?
     ;;
     -m|--mount)
-        "$PRIV" "${PREFIX}"/share/archbox/bin/init start
+        $PRIV "${PREFIX}"/share/archbox/bin/init start
     ;;
     -u|--umount)
-        "$PRIV" "${PREFIX}"/share/archbox/bin/init stop
+        $PRIV "${PREFIX}"/share/archbox/bin/init stop
     ;;
     --remount-run)
-        "$PRIV" "${PREFIX}"/share/archbox/bin/uth remountrun
+        $PRIV "${PREFIX}"/share/archbox/bin/uth remountrun
         exit $?
     ;;
     --mount-runtime-only)
-        "$PRIV" "${PREFIX}"/share/archbox/bin/uth runtimeonly
+        $PRIV "${PREFIX}"/share/archbox/bin/uth runtimeonly
         exit $?
     ;;
     -h|--help)
@@ -128,8 +128,8 @@ case $1 in
     ;;
     *)
         storeenv
-        "$PRIV" "${PREFIX}"/share/archbox/bin/uth copyresolv
-        "$PRIV" "${PREFIX}"/share/archbox/bin/exec $@
+        $PRIV "${PREFIX}"/share/archbox/bin/uth copyresolv
+        $PRIV "${PREFIX}"/share/archbox/bin/exec $@
         exit $?
     ;;
 esac
