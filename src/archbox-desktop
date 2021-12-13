@@ -2,6 +2,103 @@
 
 . /etc/archbox.conf >/dev/null 2>&1
 
+multiselect() {
+  echo 'Select with <space>, confirm with <enter>'
+
+  # little helpers for terminal print control and key input
+  ESC=$( printf "\033")
+  cursor_blink_on()   { printf "$ESC[?25h"; }
+  cursor_blink_off()  { printf "$ESC[?25l"; }
+  cursor_to()         { printf "$ESC[$1;${2:-1}H"; }
+  print_inactive()    { printf "$2   $1 "; }
+  print_active()      { printf "$2  $ESC[7m $1 $ESC[27m"; }
+  get_cursor_row()    { IFS=';' read -sdR -p $'\E[6n' ROW COL; echo ${ROW#*[}; }
+  key_input()         {
+    local key
+    IFS= read -rsn1 key 2>/dev/null >&2
+    if [[ $key = ""      ]]; then echo enter; fi;
+    if [[ $key = $'\x20' ]]; then echo space; fi;
+    if [[ $key = $'\x1b' ]]; then
+      read -rsn2 key
+      if [[ $key = [A ]]; then echo up;    fi;
+      if [[ $key = [B ]]; then echo down;  fi;
+    fi
+  }
+  toggle_option()    {
+    local arr_name=$1
+    eval "local arr=(\"\${${arr_name}[@]}\")"
+    local option=$2
+    if [[ ${arr[option]} == true ]]; then
+      arr[option]=
+    else
+      arr[option]=true
+    fi
+    eval $arr_name='("${arr[@]}")'
+  }
+
+  local retval=$1
+  local options
+  local defaults
+
+  IFS=';' read -r -a options <<< "$2"
+  if [[ -z $3 ]]; then
+    defaults=()
+  else
+    IFS=';' read -r -a defaults <<< "$3"
+  fi
+  local selected=()
+
+  for ((i=0; i<${#options[@]}; i++)); do
+    selected+=("${defaults[i]}")
+    printf "\n"
+  done
+
+  # determine current screen position for overwriting the options
+  local lastrow=`get_cursor_row`
+  local startrow=$(($lastrow - ${#options[@]}))
+
+  # ensure cursor and input echoing back on upon a ctrl+c during read -s
+  trap "cursor_blink_on; stty echo; printf '\n'; exit" 2
+  cursor_blink_off
+
+  local active=0
+  while true; do
+    # print options by overwriting the last lines
+    local idx=0
+    for option in "${options[@]}"; do
+      local prefix="[ ]"
+      if [[ ${selected[idx]} == true ]]; then
+        prefix="[x]"
+      fi
+
+      cursor_to $(($startrow + $idx))
+      if [ $idx -eq $active ]; then
+        print_active "$option" "$prefix"
+      else
+        print_inactive "$option" "$prefix"
+      fi
+        ((idx++))
+      done
+
+      # user key control
+      case `key_input` in
+        space)  toggle_option selected $active;;
+        enter)  break;;
+        up)     ((active--));
+                if [ $active -lt 0 ]; then active=$((${#options[@]} - 1)); fi;;
+        down)   ((active++));
+                if [ $active -ge ${#options[@]} ]; then active=0; fi;;
+      esac
+    done
+
+    # cursor position back to normal
+    cursor_to $lastrow
+    printf "\n"
+    cursor_blink_on
+
+    eval $retval='("${selected[@]}")'
+}
+
 # Text colors/formatting
 red='\033[1;31m' 
 green='\033[1;32m' 
@@ -19,13 +116,12 @@ msg(){
 
 install_desktop(){
     mkdir -p ~/.local/share/applications/archbox
-    for i in $@; do
+        i="$(echo $1 | sed 's|.*/||')"
         archbox readlink /usr/share/applications/$i >/dev/null 2>&1 \
-            && cp "${CHROOT}"/$(archbox readlink /usr/share/applications/$i) ~/.local/share/applications/archbox \
-            || cp "${CHROOT}"/usr/share/applications/$i "~/.local/share/applications/archbox"
+            && cp "${CHROOT}"/$(archbox readlink /usr/share/applications/$i) $HOME/.local/share/applications/archbox/$i \
+            || cp "${CHROOT}"/usr/share/applications/$i "$HOME/.local/share/applications/archbox/$i"
         sed -i 's/Exec=/Exec=archbox\ /g' ~/.local/share/applications/archbox/$i
         sed -i '/TryExec=/d' ~/.local/share/applications/archbox/$i
-    done
 }
 
 checkdep(){
@@ -35,14 +131,11 @@ checkdep(){
 help_text(){
     printf "%s" "
 USAGE: $0 <arguments>
-
 OPTIONS:
-  -i, --install FILE    Installs desktop entries in /usr/share/applications
-  -r, --remove FILE     Removes desktop entries in ~/.local/share/applications/archbox
+  <no option>           Choice to install or uninstall desktop entries
   -l, --list            List available desktop entries
   -s, --list-installed  List installed desktop entries
   -h, --help            Displays this help message
-
 "
 }
 
@@ -53,21 +146,6 @@ list(){
 }
 
 case $1 in 
-    -i|--install)
-        checkdep update-desktop-database
-        install_desktop ${@#$1}
-        update-desktop-database
-        exit $?
-    ;;
-    -r|--remove)
-        checkdep update-desktop-database
-        selected_entry=${@#$1}
-        for i in $selected_entry; do
-            rm ~/.local/share/applications/archbox/$i
-        done
-        update-desktop-database
-        exit $?
-    ;;
     -h|--help)
         help_text
         exit 0
@@ -80,44 +158,39 @@ case $1 in
         list ~/.local/share/applications/archbox
     ;;
     *)
-        checkdep zenity
         checkdep sed
-        checkdep update-desktop-database
-        action="$(zenity --list --radiolist --title 'Archbox Desktop Manager' \
-            --height=200 --width=450 --column 'Select' --column 'Action' \
-            --text 'What do you want to do?' \
-             FALSE 'Install desktop entries' FALSE 'Remove desktop entries')"
-        case $action in
-            'Install desktop entries')
-                zenity_entry="$(list "${CHROOT}"/usr/share/applications | sed 's/\ /\ FALSE\ /g')"
-                selected_entry=$(zenity --list --checklist --height=500 --width=450 \
-                    --title="Archbox Desktop Manager" \
-                    --text "Select .desktop entries those you want to install" \
-                    --column "Select" --column "Applications" \
-                    FALSE $zenity_entry | sed 's/|/\ /g')
-                [ $selected_entry ] || exit 1
-                install_desktop $selected_entry
-                update-desktop-database
-                exit 0
-            ;;
-            'Remove desktop entries')
-                list_desktop="$(list ~/.local/share/applications/archbox)"
-                [ $list_desktop = "*" ] && zenity --info --title "Archbox Desktop Manager" \
-                    --text "No .desktop files installed" --width=300 && exit 1
-                zenity_entry="$(printf "%s" "$list_desktop" | sed 's/\ /\ FALSE\ /g')"
-                selected_entry=$(zenity --list --checklist --height=500 --width=450 \
-                --title="Archbox Desktop Manager" \
-                --text "Select .desktop entries those you want to remove" \
-                --column "Select" --column "Applications" \
-                FALSE $zenity_entry | sed 's/|/\ /g')
-                [[ -z $selected_entry ]] && exit 1
-                for i in $selected_entry; do
-                    rm ~/.local/share/applications/archbox/$i
+        checkdep tr
+        printf "What do you want to do?\nPress I to install desktop entries.\nPress R to remove desktop entries. (I/r)"
+        read -rn 1
+        case $REPLY in
+            [rR])
+                LIST="$(list "${HOME}"/.local/share/applications/archbox)"
+                printf "$LIST" >/tmp/archboxlist
+                LIST2="$(cat /tmp/archboxlist | sed -z 's/\n/;/g;s/,$/\n/')"
+                multiselect RESULT "${LIST2}"
+                for i in "${!RESULT[@]}"; do
+                    if [ "${RESULT[$i]}" == "true" ]; then
+                        rm ${HOME}/.local/share/applications/archbox/"$(sed "$((i+1))q;d" /tmp/archboxlist | sed 's|.*/||')"
+                    fi
                 done
-                update-desktop-database
+                rm /tmp/archboxlist
                 exit $?
+            ;;
+           *)
+                LIST="$(list "${CHROOT}"/usr/share/applications)"
+                printf "$LIST" >/tmp/archboxlist
+                LIST2="$(cat /tmp/archboxlist | sed -z 's/\n/;/g;s/,$/\n/')"
+                multiselect RESULT "${LIST2}"
+                for i in "${!RESULT[@]}"; do
+                    if [ "${RESULT[$i]}" == "true" ]; then
+                        install_desktop "$(sed "$((i+1))q;d" /tmp/archboxlist)"
+                    fi
+                done
+                rm /tmp/archboxlist
+                exit 0
+
             ;;
         esac
         exit 1
     ;;
-esac    
+esac
