@@ -133,6 +133,8 @@ help_text(){
 USAGE: $0 <arguments>
 OPTIONS:
   <no option>           Choice to install or uninstall desktop entries
+  -i, --install FILE    Installs desktop entries in /usr/share/applications
+  -r, --remove FILE     Removes desktop entries in ~/.local/share/applications/archbox
   -l, --list            List available desktop entries
   -s, --list-installed  List installed desktop entries
   -h, --help            Displays this help message
@@ -146,6 +148,21 @@ list(){
 }
 
 case $1 in 
+    -i|--install)
+        checkdep update-desktop-database
+        install_desktop ${@#$1}
+        update-desktop-database
+        exit $?
+    ;;
+    -r|--remove)
+        checkdep update-desktop-database
+        selected_entry=${@#$1}
+        for i in $selected_entry; do
+            rm ~/.local/share/applications/archbox/$i
+        done
+        update-desktop-database
+        exit $?
+    ;;
     -h|--help)
         help_text
         exit 0
@@ -160,6 +177,7 @@ case $1 in
     *)
         checkdep sed
         checkdep tr
+        checkdep update-desktop-databse
         printf "What do you want to do?\nPress I to install desktop entries.\nPress R to remove desktop entries. (I/r)"
         read -rn 1
         case $REPLY in
@@ -173,6 +191,7 @@ case $1 in
                         rm ${HOME}/.local/share/applications/archbox/"$(sed "$((i+1))q;d" /tmp/archboxlist | sed 's|.*/||')"
                     fi
                 done
+                update-desktop-database
                 rm /tmp/archboxlist
                 exit $?
             ;;
@@ -186,11 +205,11 @@ case $1 in
                         install_desktop "$(sed "$((i+1))q;d" /tmp/archboxlist)"
                     fi
                 done
+                update-desktop-database
                 rm /tmp/archboxlist
                 exit 0
 
             ;;
         esac
-        exit 1
     ;;
 esac
