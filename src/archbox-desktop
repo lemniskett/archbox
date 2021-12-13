@@ -3,7 +3,7 @@
 . /etc/archbox.conf >/dev/null 2>&1
 
 multiselect() {
-  echo 'Select with <space>, confirm with <enter>'
+  echo "\nSelect with <space>, confirm with <enter>"
 
   # little helpers for terminal print control and key input
   ESC=$( printf "\033")
