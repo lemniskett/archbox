@@ -25,7 +25,7 @@ Add `archbox -m` to `~/.bashrc` in host.
 Install [`cros-adapta-gtk-theme`](https://aur.archlinux.org/packages/cros-adapta-gtk-theme/), `ttf-roboto`, and `papirus-icon-theme` and use it with :
 ```sh
 gsettings set org.gnome.desktop.interface gtk-theme "cros-adapta"
-gsettings set org.gnome.desktop.interface icon-theme "Papirus"
+gsettings set org.gnome.desktop.interface icon-theme "Papirus-Light"
 gsettings set org.gnome.desktop.interface font-name "Roboto 10"
 ```
 
